@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🏙️ City Property Tax System</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+
+    <!-- Chart.js for Dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js">
+    </script>
+
+    <!-- jsPDF for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+    </script>
+
+    <style>
+        /* ========== GLOBAL RESET ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* ========== APP CONTAINER ========== */
+        #app {
+            width: 100%;
+            max-width: 1400px;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 20px 60px rgba(11, 79, 108, 0.15);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            min-height: 90vh;
+        }
+
+        #app.active {
+            display: flex;
+        }
+
+        /* ========== LOGIN SCREEN ========== */
+        #loginScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+            background: linear-gradient(145deg, #0B4F6C, #083b51);
+            border-radius: 28px;
+            padding: 30px;
+        }
+
+        .login-box {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 24px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .login-box h1 {
+            color: #0B4F6C;
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .login-box .subtitle {
+            color: #6c7a8a;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .login-box .logo-icon {
+            font-size: 50px;
+            color: #C69430;
+            margin-bottom: 10px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            margin-bottom: 16px;
+            transition: 0.2s;
+            background: #f8fafc;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: #0B4F6C;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(11, 79, 108, 0.08);
+        }
+
+        .login-box .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #0B4F6C;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+
+        .login-box .btn-login:hover {
+            background: #083b51;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(11, 79, 108, 0.3);
+        }
+
+        .login-box .error-msg {
+            color: #c62828;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .login-box .register-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6c7a8a;
+        }
+
+        .login-box .register-link a {
+            color: #0B4F6C;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* ========== TOP BAR ========== */
+        .top-bar {
+            background: #0B4F6C;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .top-bar .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .top-bar .brand i {
+            color: #C69430;
+            font-size: 26px;
+        }
+
+        .top-bar .search-area {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .top-bar .search-area input {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 30px;
+            font-size: 14px;
+            flex: 1;
+            min-width: 150px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transition: 0.2s;
+        }
+
+        .top-bar .search-area input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .top-bar .search-area input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .top-bar .search-area button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
+            background: #C69430;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 13px;
+        }
+
+        .top-bar .search-area button:hover {
+            background: #b0812a;
+        }
+
+        .top-bar .user-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: white;
+        }
+
+        .top-bar .user-area .logout-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+            font-size: 13px;
+        }
+
+        .top-bar .user-area .logout-btn:hover {
+            background: #c62828;
+        }
+
+        /* ========== HORIZONTAL PANEL (Tabs) ========== */
+        .horizontal-panel {
+            display: flex;
+            background: #f8fafc;
+            border-bottom: 2px solid #e2e8f0;
+            padding: 0 20px;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+
+        .horizontal-panel .tab {
+            padding: 14px 24px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #6c7a8a;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .horizontal-panel .tab:hover {
+            color: #0B4F6C;
+        }
+
+        .horizontal-panel .tab.active {
+            color: #0B4F6C;
+            border-bottom-color: #C69430;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ========== LEFT PANEL (Vertical List) ========== */
+        .left-panel {
+            width: 35%;
+            background: #f8fafc;
+            border-right: 2px solid #e2e8f0;
+            padding: 16px;
+            overflow-y: auto;
+            max-height: 65vh;
+        }
+
+        .left-panel .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .left-panel .list-header h3 {
+            font-size: 15px;
+            color: #0B4F6C;
+        }
+
+        .left-panel .list-header span {
+            background: #0B4F6C;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .property-item {
+            background: white;
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .property-item:hover {
+            border-color: #C69430;
+            transform: translateX(4px);
+        }
+
+        .property-item.active {
+            border-color: #0B4F6C;
+            background: #f0f7fa;
+        }
+
+        .property-item .item-id {
+            font-weight: 700;
+            font-size: 13px;
+            color: #0B4F6C;
+        }
+
+        .property-item .item-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: #1a2a3a;
+        }
+
+        .property-item .item-phone {
+            font-size: 12px;
+            color: #6c7a8a;
+        }
+
+        .property-item .item-tax {
+            font-size: 13px;
+            font-weight: 600;
+            color: #C69430;
+        }
+
+        /* ========== RIGHT PANEL (Details) ========== */
+        .right-panel {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            max-height: 65vh;
+        }
+
+        .right-panel .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 24px;
+        }
+
+        .right-panel .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .right-panel .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2a3b52;
+        }
+
+        .right-panel .form-group input,
+        .right-panel .form-group select {
+            padding: 10px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: 0.2s;
+            background: #fafcff;
+        }
+
+        .right-panel .form-group input:focus,
+        .right-panel .form-group select:focus {
+            outline: none;
+            border-color: #0B4F6C;
+            box-shadow: 0 0 0 4px rgba(11, 79, 108, 0.06);
+        }
+
+        .right-panel .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        /* ========== CALCULATED FIELDS ========== */
+        .calc-box {
+            background: #f0f7fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            border-left: 4px solid #C69430;
+        }
+
+        .calc-box .calc-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 14px;
+        }
+
+        .calc-box .calc-row .label {
+            color: #2a3b52;
+            font-weight: 500;
+        }
+
+        .calc-box .calc-row .value {
+            font-weight: 700;
+            color: #0B4F6C;
+        }
+
+        .calc-box .calc-row.total {
+            border-top: 2px solid #cbd5e1;
+            margin-top: 8px;
+            padding-top: 10px;
+            font-size: 16px;
+        }
+
+        .calc-box .calc-row.total .value {
+            color: #C69430;
+            font-size: 18px;
+        }
+
+        /* ========== BOTTOM BAR ========== */
+        .bottom-bar {
+            background: #f8fafc;
+            border-top: 2px solid #e2e8f0;
+            padding: 12px 24px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .bottom-bar .btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bottom-bar .btn-primary {
+            background: #0B4F6C;
+            color: white;
+        }
+
+        .bottom-bar .btn-primary:hover {
+            background: #083b51;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(11, 79, 108, 0.25);
+        }
+
+        .bottom-bar .btn-success {
+            background: #2E7D32;
+            color: white;
+        }
+
+        .bottom-bar .btn-success:hover {
+            background: #1e5a22;
+        }
+
+        .bottom-bar .btn-warning {
+            background: #C69430;
+            color: white;
+        }
+
+        .bottom-bar .btn-warning:hover {
+            background: #b0812a;
+        }
+
+        .bottom-bar .btn-danger {
+            background: #c62828;
+            color: white;
+        }
+
+        .bottom-bar .btn-danger:hover {
+            background: #a12020;
+        }
+
+        .bottom-bar .btn-outline {
+            background: transparent;
+            border: 2px solid #cbd5e1;
+            color: #2a3b52;
+        }
+
+        .bottom-bar .btn-outline:hover {
+            background: #e2e8f0;
+        }
+
+        .bottom-bar .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .bottom-bar .counter {
+            margin-left: auto;
+            font-size: 13px;
+            color: #6c7a8a;
+            font-weight: 500;
+        }
+
+        /* ========== TOAST NOTIFICATION ========== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a2a3a;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 16px;
+            font-weight: 500;
+            font-size: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        .toast.success {
+            background: #2E7D32;
+        }
+        .toast.error {
+            background: #c62828;
+        }
+        .toast.warning {
+            background: #C69430;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        /* ========== DASHBOARD ========== */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .stat-card .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0B4F6C;
+        }
+
+        .stat-card .stat-label {
+            font-size: 14px;
+            color: #6c7a8a;
+            margin-top: 4px;
+        }
+
+        .stat-card .stat-icon {
+            font-size: 24px;
+            color: #C69430;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            margin-top: 16px;
+            max-width: 100%;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .left-panel {
+                width: 100%;
+                max-height: 30vh;
+                border-right: none;
+                border-bottom: 2px solid #e2e8f0;
+            }
+            .right-panel {
+                max-height: 50vh;
+            }
+            .right-panel .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .right-panel .form-group.full-width {
+                grid-column: span 1;
+            }
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .top-bar .search-area {
+                max-width: 100%;
+            }
+            .bottom-bar {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .bottom-bar .counter {
+                margin-left: 0;
+                width: 100%;
+                text-align: center;
+            }
+            .login-box {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            .horizontal-panel .tab {
+                padding: 10px 14px;
+                font-size: 12px;
+            }
+            .right-panel {
+                padding: 16px;
+            }
+            .calc-box .calc-row {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== TOAST ========== -->
+    <div id="toast" class="toast"></div>
+
+    <!-- ========== LOGIN SCREEN ========== -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <div class="logo-icon"><i class="fas fa-city"></i></div>
+            <h1>Property Tax System</h1>
+            <p class="subtitle">City Revenue Management</p>
+
+            <input type="text" id="loginUser" placeholder="Username" value="admin" />
+            <input type="password" id="loginPass" placeholder="Password" value="admin123" />
+            <button class="btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
+
+            <div id="loginError" class="error-msg"><i class="fas fa-exclamation-circle"></i> Invalid credentials</div>
+
+            <div class="register-link">
+                Don't have an account? <a id="showRegister">Create one</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== REGISTER SCREEN (Hidden) ========== -->
+    <div id="registerScreen" style="display:none; justify-content:center; align-items:center; min-height:90vh; background: linear-gradient(145deg, #0B4F6C, #083b51); border-radius:28px; padding:30px;">
+        <div class="login-box">
+            <div class="logo-icon"><i class="fas fa-user-plus"></i></div>
+            <h1>Create Account</h1>
+            <p class="subtitle">Register as a system officer</p>
+
+            <input type="text" id="regName" placeholder="Full Name" />
+            <input type="text" id="regUser" placeholder="Username" />
+            <input type="password" id="regPass" placeholder="Password" />
+            <input type="password" id="regConfirm" placeholder="Confirm Password" />
+
+            <button class="btn-login" id="registerBtn"><i class="fas fa-check"></i> Register</button>
+            <div id="regError" class="error-msg"></div>
+            <div class="register-link">
+                Already have an account? <a id="showLogin">Login here</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MAIN APP ========== -->
+    <div id="app">
+
+        <!-- TOP BAR -->
+        <div class="top-bar">
+            <div class="brand">
+                <i class="fas fa-landmark"></i>
+                <span>CityProperty</span>
+            </div>
+            <div class="search-area">
+                <input type="text" id="searchInput" placeholder="🔍 Search by Name, ID, or Phone..." />
+                <button id="searchBtn"><i class="fas fa-search"></i> Search</button>
+                <button id="clearSearchBtn" style="background:rgba(255,255,255,0.1);"><i class="fas fa-times"></i> Clear</button>
+            </div>
+            <div class="user-area">
+                <span id="loggedUser"><i class="fas fa-user"></i> Admin</span>
+                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+
+        <!-- HORIZONTAL PANEL (Tabs) -->
+        <div class="horizontal-panel">
+            <div class="tab active" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</div>
+            <div class="tab" data-tab="properties"><i class="fas fa-building"></i> Properties</div>
+            <div class="tab" data-tab="reports"><i class="fas fa-file-pdf"></i> Reports</div>
+        </div>
+
+        <!-- ========== TAB: DASHBOARD ========== -->
+        <div id="tab-dashboard" class="main-content" style="padding:24px; flex-direction:column; overflow-y:auto; max-height:65vh;">
+            <div class="dashboard-stats" id="statsContainer">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-building"></i></div>
+                    <div class="stat-number" id="statProperties">0</div>
+                    <div class="stat-label">Total Properties</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-coins"></i></div>
+                    <div class="stat-number" id="statRevenue">0</div>
+                    <div class="stat-label">Total Revenue (ETB)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+                    <div class="stat-number" id="statUnpaid">0</div>
+                    <div class="stat-label">Unpaid Properties</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-number" id="statPaid">0</div>
+                    <div class="stat-label">Paid Properties</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="dashboardChart"></canvas>
+            </div>
+        </div>
+
+        <!-- ========== TAB: PROPERTIES ========== -->
+        <div id="tab-properties" class="main-content" style="display:none;">
+
+            <!-- LEFT PANEL (List) -->
+            <div class="left-panel" id="propertyList">
+                <div class="list-header">
+                    <h3><i class="fas fa-list"></i> Properties</h3>
+                    <span id="listCount">0</span>
+                </div>
+                <div id="propertyItems">
+                    <div style="text-align:center; color:#6c7a8a; padding:40px 0;">
+                        <i class="fas fa-building" style="font-size:40px; opacity:0.3;"></i>
+                        <p>No properties registered yet.<br />Click <strong>New</strong> to add one.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL (Details Form) -->
+            <div class="right-panel" id="propertyForm">
+                <h3 style="color:#0B4F6C; margin-bottom:16px;"><i class="fas fa-edit"></i> Property Details</h3>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Property ID</label>
+                        <input type="text" id="fId" placeholder="Auto-generated" readonly style="background:#f0f4f8;" />
+                    </div>
+                    <div class="form-group">
+                        <label>Registration Date</label>
+                        <input type="date" id="fDate" />
+                    </div>
+                    <div class="form-group">
+                        <label>Owner Name *</label>
+                        <input type="text" id="fOwner" placeholder="Full name" />
+                    </div>
+                    <div class="form-group">
+                        <label>Owner Phone *</label>
+                        <input type="text" id="fPhone" placeholder="09XXXXXXXX" />
+                    </div>
+                    <div class="form-group">
+                        <label>Location (Woreda)</label>
+                        <input type="text" id="fLocation" placeholder="e.g., Woreda 04" />
+                    </div>
+                    <div class="form-group">
+                        <label>Usage Type</label>
+                        <select id="fUsage">
+                            <option value="Residential">Residential</option>
+                            <option value="Commercial">Commercial</option>
+                            <option value="Industrial">Industrial</option>
+                            <option value="Mixed">Mixed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Land Area (m²) *</label>
+                        <input type="number" id="fLand" placeholder="0" min="0" step="0.01" />
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Floors *</label>
+                        <input type="number" id="fFloors" placeholder="1" min="1" />
+                    </div>
+                    <div class="form-group">
+                        <label>Floor Occupancy %</label>
+                        <input type="number" id="fOccupancy" placeholder="80" min="0" max="100" value="80" />
+                    </div>
+                    <div class="form-group">
+                        <label>Land Value per m² (ETB)</label>
+                        <input type="number" id="fLandValue" placeholder="10000" min="0" value="10000" />
+                    </div>
+                    <div class="form-group">
+                        <label>Construction Cost per m² (ETB)</label>
+                        <input type="number" id="fConstCost" placeholder="15000" min="0" value="15000" />
+                    </div>
+                    <div class="form-group">
+                        <label>Tax Rate (%)</label>
+                        <input type="number" id="fTaxRate" placeholder="1.5" min="0" step="0.1" value="1.5" />
+                    </div>
+                    <div class="form-group">
+                        <label>Payment Status</label>
+                        <select id="fStatus">
+                            <option value="Paid">Paid</option>
+                            <option value="Unpaid">Unpaid</option>
+                            <option value="Overdue">Overdue</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Calculated Values -->
+                <div class="calc-box" id="calcBox">
+                    <div class="calc-row">
+                        <span class="label"><i class="fas fa-calculator"></i> Total Building Area</span>
+                        <span class="value" id="calcTotalArea">0.00 m²</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="label">Assessed Value</span>
+                        <span class="value" id="calcAssessed">0.00 ETB</span>
+                    </div>
+                    <div class="calc-row total">
+                        <span class="label"><i class="fas fa-money-bill-wave"></i> Annual Property Tax</span>
+                        <span class="value" id="calcTax">0.00 ETB</span>
+                    </div>
+                </div>
+
+                <!-- Hidden index for editing -->
+                <input type="hidden" id="editIndex" value="-1" />
+            </div>
+        </div>
+
+        <!-- ========== TAB: REPORTS ========== -->
+        <div id="tab-reports" class="main-content" style="display:none; padding:24px; flex-direction:column; overflow-y:auto; max-height:65vh;">
+            <h3 style="color:#0B4F6C; margin-bottom:16px;"><i class="fas fa-file-alt"></i> Generate Reports</h3>
+
+            <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px;">
+                <button class="btn btn-primary" id="exportPdf"><i class="fas fa-file-pdf"></i> Export PDF</button>
+                <button class="btn btn-success" id="exportExcel"><i class="fas fa-file-excel"></i> Export Excel</button>
+                <button class="btn btn-warning" id="exportCsv"><i class="fas fa-file-csv"></i> Export CSV</button>
+                <button class="btn btn-outline" id="printReport"><i class="fas fa-print"></i> Print</button>
+            </div>
+
+            <div style="background:white; border-radius:16px; border:2px solid #e2e8f0; padding:20px; overflow-x:auto;">
+                <h4 style="color:#0B4F6C; margin-bottom:12px;">Property Register</h4>
+                <table id="reportTable" style="width:100%; border-collapse:collapse; font-size:13px;">
+                    <thead>
+                        <tr style="background:#0B4F6C; color:white;">
+                            <th style="padding:10px; text-align:left;">ID</th>
+                            <th style="padding:10px; text-align:left;">Owner</th>
+                            <th style="padding:10px; text-align:left;">Phone</th>
+                            <th style="padding:10px; text-align:left;">Location</th>
+                            <th style="padding:10px; text-align:right;">Land (m²)</th>
+                            <th style="padding:10px; text-align:right;">Floors</th>
+                            <th style="padding:10px; text-align:right;">Tax (ETB)</th>
+                            <th style="padding:10px; text-align:center;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportBody">
+                        <tr><td colspan="8" style="text-align:center; padding:30px; color:#6c7a8a;">No data to display</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== BOTTOM BAR ========== -->
+        <div class="bottom-bar">
+            <button class="btn btn-primary" id="btnNew"><i class="fas fa-plus"></i> New</button>
+            <button class="btn btn-outline" id="btnPrev"><i class="fas fa-chevron-left"></i> Previous</button>
+            <button class="btn btn-outline" id="btnNext">Next <i class="fas fa-chevron-right"></i></button>
+            <button class="btn btn-warning" id="btnSave"><i class="fas fa-save"></i> Save</button>
+            <button class="btn btn-danger" id="btnDelete"><i class="fas fa-trash"></i> Delete</button>
+            <button class="btn btn-outline" id="btnClean"><i class="fas fa-broom"></i> Clean</button>
+            <span class="counter" id="recordCounter">Record 0 of 0</span>
+        </div>
+
+    </div>
+
+    <script>
+        // ========================================================
+        // ========== COMPLETE JAVASCRIPT ENGINE ==========
+        // ========================================================
+
+        // ---------- GLOBAL STATE ----------
+        let properties = [];
+        let currentIndex = -1;
+        let selectedId = null;
+        let currentUser = null;
+        let isSearching = false;
+        let searchResults = [];
+
+        // DOM References
+        const app = document.getElementById('app');
+        const loginScreen = document.getElementById('loginScreen');
+        const registerScreen = document.getElementById('registerScreen');
+        const propertyList = document.getElementById('propertyItems');
+        const listCount = document.getElementById('listCount');
+        const recordCounter = document.getElementById('recordCounter');
+
+        // ---------- TOAST ----------
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + type + ' show';
+            clearTimeout(t._hide);
+            t._hide = setTimeout(() => t.classList.remove('show'), 3500);
+        }
+
+        // ---------- DATA PERSISTENCE ----------
+        function loadData() {
+            try {
+                const d = localStorage.getItem('propertySystemData');
+                if (d) properties = JSON.parse(d);
+            } catch (_) { properties = []; }
+            // Ensure each property has all fields
+            properties = properties.map(p => ({
+                id: p.id || 'PROP-0001',
+                date: p.date || new Date().toISOString().split('T')[0],
+                owner: p.owner || '',
+                phone: p.phone || '',
+                location: p.location || '',
+                usage: p.usage || 'Residential',
+                land: parseFloat(p.land) || 0,
+                floors: parseInt(p.floors) || 1,
+                occupancy: parseFloat(p.occupancy) || 80,
+                landValue: parseFloat(p.landValue) || 10000,
+                constCost: parseFloat(p.constCost) || 15000,
+                taxRate: parseFloat(p.taxRate) || 1.5,
+                status: p.status || 'Unpaid',
+                totalArea: parseFloat(p.totalArea) || 0,
+                assessed: parseFloat(p.assessed) || 0,
+                tax: parseFloat(p.tax) || 0
+            }));
+        }
+
+        function saveData() {
+            localStorage.setItem('propertySystemData', JSON.stringify(properties));
+        }
+
+        // ---------- ID GENERATION ----------
+        function generateId() {
+            const count = properties.length + 1;
+            return 'PROP-' + String(count).padStart(4, '0');
+        }
+
+        // ---------- CALCULATIONS ----------
+        function calculateTax(land, floors, occupancy, landValue, constCost, taxRate) {
+            const totalArea = land * floors * (occupancy / 100);
+            const assessed = (land * landValue) + (totalArea * constCost);
+            const tax = assessed * (taxRate / 100);
+            return { totalArea, assessed, tax };
+        }
+
+        // ---------- RENDER FUNCTIONS ----------
+        function renderList(data) {
+            const items = data || properties;
+            listCount.textContent = items.length;
+            if (items.length === 0) {
+                propertyList.innerHTML = `
+                    <div style="text-align:center; color:#6c7a8a; padding:40px 0;">
+                        <i class="fas fa-building" style="font-size:40px; opacity:0.3;"></i>
+                        <p>No properties registered yet.<br />Click <strong>New</strong> to add one.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            propertyList.innerHTML = items.map((p, idx) => {
+                const isActive = (p.id === selectedId) ? 'active' : '';
+                return `
+                    <div class="property-item ${isActive}" data-idx="${idx}" data-id="${p.id}">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span class="item-id">${p.id}</span>
+                            <span class="item-tax">${p.tax.toFixed(2)} ETB</span>
+                        </div>
+                        <div class="item-name">${p.owner || 'Unknown'}</div>
+                        <div style="display:flex; justify-content:space-between; font-size:12px;">
+                            <span class="item-phone"><i class="fas fa-phone"></i> ${p.phone || 'N/A'}</span>
+                            <span style="color:${p.status === 'Paid' ? '#2E7D32' : '#c62828'}; font-weight:600;">${p.status}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Attach click events
+            document.querySelectorAll('.property-item').forEach(el => {
+                el.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    selectProperty(id);
+                });
+            });
+        }
+
+        function renderForm(p) {
+            if (!p) {
+                document.getElementById('fId').value = '';
+                document.getElementById('fDate').value = '';
+                document.getElementById('fOwner').value = '';
+                document.getElementById('fPhone').value = '';
+                document.getElementById('fLocation').value = '';
+                document.getElementById('fUsage').value = 'Residential';
+                document.getElementById('fLand').value = '';
+                document.getElementById('fFloors').value = '';
+                document.getElementById('fOccupancy').value = '80';
+                document.getElementById('fLandValue').value = '10000';
+                document.getElementById('fConstCost').value = '15000';
+                document.getElementById('fTaxRate').value = '1.5';
+                document.getElementById('fStatus').value = 'Unpaid';
+                document.getElementById('calcTotalArea').textContent = '0.00 m²';
+                document.getElementById('calcAssessed').textContent = '0.00 ETB';
+                document.getElementById('calcTax').textContent = '0.00 ETB';
+                document.getElementById('editIndex').value = '-1';
+                return;
+            }
+
+            document.getElementById('fId').value = p.id || '';
+            document.getElementById('fDate').value = p.date || '';
+            document.getElementById('fOwner').value = p.owner || '';
+            document.getElementById('fPhone').value = p.phone || '';
+            document.getElementById('fLocation').value = p.location || '';
+            document.getElementById('fUsage').value = p.usage || 'Residential';
+            document.getElementById('fLand').value = p.land || '';
+            document.getElementById('fFloors').value = p.floors || '';
+            document.getElementById('fOccupancy').value = p.occupancy || 80;
+            document.getElementById('fLandValue').value = p.landValue || 10000;
+            document.getElementById('fConstCost').value = p.constCost || 15000;
+            document.getElementById('fTaxRate').value = p.taxRate || 1.5;
+            document.getElementById('fStatus').value = p.status || 'Unpaid';
+
+            document.getElementById('calcTotalArea').textContent = (p.totalArea || 0).toFixed(2) + ' m²';
+            document.getElementById('calcAssessed').textContent = (p.assessed || 0).toFixed(2) + ' ETB';
+            document.getElementById('calcTax').textContent = (p.tax || 0).toFixed(2) + ' ETB';
+
+            const idx = properties.findIndex(prop => prop.id === p.id);
+            document.getElementById('editIndex').value = idx;
+        }
+
+        function updateCounter() {
+            const total = properties.length;
+            const idx = currentIndex + 1;
+            recordCounter.textContent = total > 0 ? `Record ${idx} of ${total}` : 'Record 0 of 0';
+        }
+
+        function selectProperty(id) {
+            selectedId = id;
+            const idx = properties.findIndex(p => p.id === id);
+            if (idx === -1) return;
+            currentIndex = idx;
+            renderForm(properties[idx]);
+            renderList(properties);
+            updateCounter();
+            // Switch to properties tab
+            switchTab('properties');
+        }
+
+        // ---------- TAB SWITCHING ----------
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab[data-tab="${tabName}"]`)?.classList.add('active');
+
+            document.querySelectorAll('.main-content').forEach(el => el.style.display = 'none');
+            const target = document.getElementById('tab-' + tabName);
+            if (target) {
+                target.style.display = tabName === 'dashboard' ? 'flex' : 'flex';
+                if (tabName === 'dashboard') {
+                    target.style.flexDirection = 'column';
+                }
+                if (tabName === 'properties') {
+                    target.style.flexDirection = 'row';
+                }
+                if (tabName === 'reports') {
+                    target.style.flexDirection = 'column';
+                }
+            }
+
+            if (tabName === 'dashboard') updateDashboard();
+            if (tabName === 'reports') updateReportTable();
+        }
+
+        // ---------- DASHBOARD ----------
+        function updateDashboard() {
+            const total = properties.length;
+            let revenue = 0,
+                unpaid = 0,
+                paid = 0;
+            properties.forEach(p => {
+                revenue += p.tax || 0;
+                if (p.status === 'Paid') paid++;
+                else unpaid++;
+            });
+
+            document.getElementById('statProperties').textContent = total;
+            document.getElementById('statRevenue').textContent = revenue.toFixed(0);
+            document.getElementById('statUnpaid').textContent = unpaid;
+            document.getElementById('statPaid').textContent = paid;
+
+            // Chart
+            const ctx = document.getElementById('dashboardChart').getContext('2d');
+            if (window._chart) window._chart.destroy();
+
+            window._chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Paid', 'Unpaid', 'Overdue'],
+                    datasets: [{
+                        data: [
+                            properties.filter(p => p.status === 'Paid').length,
+                            properties.filter(p => p.status === 'Unpaid').length,
+                            properties.filter(p => p.status === 'Overdue').length
+                        ],
+                        backgroundColor: ['#2E7D32', '#C69430', '#c62828'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: { display: true, text: 'Property Status Distribution' }
+                    }
+                }
+            });
+        }
+
+        // ---------- REPORT TABLE ----------
+        function updateReportTable() {
+            const tbody = document.getElementById('reportBody');
+            if (properties.length === 0) {
+                tbody.innerHTML =
+                    `<tr><td colspan="8" style="text-align:center; padding:30px; color:#6c7a8a;">No data to display</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = properties.map(p => `
+                <tr style="border-bottom:1px solid #e2e8f0;">
+                    <td style="padding:8px; font-weight:600;">${p.id}</td>
+                    <td style="padding:8px;">${p.owner}</td>
+                    <td style="padding:8px;">${p.phone}</td>
+                    <td style="padding:8px;">${p.location}</td>
+                    <td style="padding:8px; text-align:right;">${(p.land||0).toFixed(2)}</td>
+                    <td style="padding:8px; text-align:right;">${p.floors||1}</td>
+                    <td style="padding:8px; text-align:right;">${(p.tax||0).toFixed(2)}</td>
+                    <td style="padding:8px; text-align:center;">
+                        <span style="padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; 
+                            background:${p.status === 'Paid' ? '#d4edda' : '#f8d7da'}; 
+                            color:${p.status === 'Paid' ? '#155724' : '#721c24'};">
+                            ${p.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ---------- CRUD OPERATIONS ----------
+        function newProperty() {
+            currentIndex = -1;
+            selectedId = null;
+            renderForm(null);
+            renderList(properties);
+            updateCounter();
+            showToast('New property form ready. Fill in details and Save.', 'success');
+            // Focus first field
+            document.getElementById('fOwner').focus();
+        }
+
+        function saveProperty() {
+            const owner = document.getElementById('fOwner').value.trim();
+            const phone = document.getElementById('fPhone').value.trim();
+            const land = parseFloat(document.getElementById('fLand').value);
+            const floors = parseInt(document.getElementById('fFloors').value);
+            const occupancy = parseFloat(document.getElementById('fOccupancy').value) || 80;
+            const landValue = parseFloat(document.getElementById('fLandValue').value) || 10000;
+            const constCost = parseFloat(document.getElementById('fConstCost').value) || 15000;
+            const taxRate = parseFloat(document.getElementById('fTaxRate').value) || 1.5;
+            const location = document.getElementById('fLocation').value.trim();
+            const usage = document.getElementById('fUsage').value;
+            const status = document.getElementById('fStatus').value;
+            const date = document.getElementById('fDate').value || new Date().toISOString().split('T')[0];
+
+            if (!owner || !phone || !land || !floors) {
+                showToast('Please fill all required fields (*)', 'error');
+                return;
+            }
+            if (phone.length < 10) {
+                showToast('Please enter a valid phone number', 'error');
+                return;
+            }
+
+            const { totalArea, assessed, tax } = calculateTax(land, floors, occupancy, landValue, constCost, taxRate);
+
+            const idx = parseInt(document.getElementById('editIndex').value);
+            const propertyData = {
+                id: document.getElementById('fId').value || generateId(),
+                date: date,
+                owner,
+                phone,
+                location: location || 'Not specified',
+                usage,
+                land,
+                floors,
+                occupancy,
+                landValue,
+                constCost,
+                taxRate,
+                status,
+                totalArea,
+                assessed,
+                tax
+            };
+
+            if (idx >= 0 && idx < properties.length) {
+                // Update existing
+                propertyData.id = properties[idx].id; // Keep same ID
+                properties[idx] = propertyData;
+                showToast(`Property ${propertyData.id} updated successfully!`, 'success');
+            } else {
+                // New
+                propertyData.id = generateId();
+                properties.push(propertyData);
+                showToast(`Property ${propertyData.id} registered successfully!`, 'success');
+            }
+
+            saveData();
+            const savedIdx = properties.findIndex(p => p.id === propertyData.id);
+            currentIndex = savedIdx;
+            selectedId = propertyData.id;
+            renderForm(properties[savedIdx]);
+            renderList(properties);
+            updateCounter();
+            updateDashboard();
+            updateReportTable();
+        }
+
+        function deleteProperty() {
+            const idx = parseInt(document.getElementById('editIndex').value);
+            if (idx < 0 || idx >= properties.length) {
+                showToast('No property selected to delete', 'error');
+                return;
+            }
+            const id = properties[idx].id;
+            if (!confirm(`Are you sure you want to delete property ${id}?`)) return;
+
+            properties.splice(idx, 1);
+            saveData();
+            currentIndex = -1;
+            selectedId = null;
+            renderForm(null);
+            renderList(properties);
+            updateCounter();
+            updateDashboard();
+            updateReportTable();
+            showToast(`Property ${id} deleted successfully.`, 'warning');
+        }
+
+        function cleanForm() {
+            if (properties.length === 0) {
+                newProperty();
+                return;
+            }
+            // Just reset without saving
+            if (currentIndex >= 0 && currentIndex < properties.length) {
+                renderForm(properties[currentIndex]);
+            } else {
+                renderForm(null);
+            }
+            showToast('Form cleared.', 'warning');
+        }
+
+        function navigate(direction) {
+            if (properties.length === 0) {
+                showToast('No properties to navigate.', 'error');
+                return;
+            }
+            if (currentIndex < 0 || currentIndex >= properties.length) {
+                currentIndex = 0;
+            }
+            let newIdx = currentIndex + direction;
+            if (newIdx < 0) newIdx = properties.length - 1;
+            if (newIdx >= properties.length) newIdx = 0;
+            currentIndex = newIdx;
+            selectedId = properties[currentIndex].id;
+            renderForm(properties[currentIndex]);
+            renderList(properties);
+            updateCounter();
+        }
+
+        // ---------- SEARCH ----------
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (!query) {
+                isSearching = false;
+                renderList(properties);
+                return;
+            }
+
+            const results = properties.filter(p =>
+                (p.id || '').toLowerCase().includes(query) ||
+                (p.owner || '').toLowerCase().includes(query) ||
+                (p.phone || '').toLowerCase().includes(query)
+            );
+
+            isSearching = true;
+            searchResults = results;
+            if (results.length === 0) {
+                showToast('No properties found matching your search.', 'error');
+                renderList([]);
+                return;
+            }
+            renderList(results);
+            // Select first result
+            if (results.length > 0) {
+                selectProperty(results[0].id);
+            }
+            showToast(`Found ${results.length} property(s).`, 'success');
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            isSearching = false;
+            renderList(properties);
+            if (properties.length > 0) {
+                selectProperty(properties[0].id);
+            } else {
+                newProperty();
+            }
+            showToast('Search cleared.', 'warning');
+        }
+
+        // ---------- EXPORTS ----------
+        function exportPDF() {
+            if (properties.length === 0) {
+                showToast('No data to export.', 'error');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+            doc.setFontSize(16);
+            doc.text('City Property Tax System - Property Register', 14, 20);
+
+            const cols = ['ID', 'Owner', 'Phone', 'Location', 'Land(m²)', 'Floors', 'Tax(ETB)', 'Status'];
+            const rows = properties.map(p => [
+                p.id, p.owner, p.phone, p.location,
+                (p.land || 0).toFixed(2),
+                p.floors || 1,
+                (p.tax || 0).toFixed(2),
+                p.status
+            ]);
+
+            doc.autoTable({
+                head: [cols],
+                body: rows,
+                startY: 30,
+                styles: { fontSize: 8 },
+                headStyles: { fillColor: [11, 79, 108] }
+            });
+
+            doc.save('Property_Register.pdf');
+            showToast('PDF exported successfully!', 'success');
+        }
+
+        function exportExcel() {
+            if (properties.length === 0) {
+                showToast('No data to export.', 'error');
+                return;
+            }
+
+            const headers = ['ID', 'Owner', 'Phone', 'Location', 'Usage', 'Land(m²)',
+                'Floors', 'Occupancy%', 'LandValue/m²', 'ConstCost/m²', 'TaxRate%',
+                'TotalArea(m²)', 'Assessed(ETB)', 'Tax(ETB)', 'Status'
+            ];
+
+            let csv = headers.join(',') + '\n';
+            properties.forEach(p => {
+                const row = [
+                    p.id, p.owner, p.phone, p.location, p.usage,
+                    (p.land || 0).toFixed(2), p.floors || 1,
+                    (p.occupancy || 80).toFixed(1),
+                    (p.landValue || 10000).toFixed(2),
+                    (p.constCost || 15000).toFixed(2),
+                    (p.taxRate || 1.5).toFixed(1),
+                    (p.totalArea || 0).toFixed(2),
+                    (p.assessed || 0).toFixed(2),
+                    (p.tax || 0).toFixed(2),
+                    p.status
+                ];
+                csv += row.join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Property_Register.csv';
+            link.click();
+            showToast('CSV exported successfully!', 'success');
+        }
+
+        function exportCSV() {
+            exportExcel(); // Same as CSV
+        }
+
+        // ---------- PRINT ----------
+        function printReport() {
+            window.print();
+        }
+
+        // ---------- AUTHENTICATION ----------
+        function login(username, password) {
+            const users = JSON.parse(localStorage.getItem('propertySystemUsers') || '[]');
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                currentUser = user;
+                document.getElementById('loggedUser').innerHTML = `<i class="fas fa-user"></i> ${user.name}`;
+                loginScreen.style.display = 'none';
+                registerScreen.style.display = 'none';
+                app.classList.add('active');
+                loadData();
+                renderList(properties);
+                if (properties.length > 0) {
+                    selectProperty(properties[0].id);
+                } else {
+                    newProperty();
+                }
+                updateDashboard();
+                updateReportTable();
+                showToast(`Welcome back, ${user.name}!`, 'success');
+                return true;
+            }
+            return false;
+        }
+
+        function register(name, username, password, confirm) {
+            if (!name || !username || !password || !confirm) {
+                document.getElementById('regError').textContent = 'Please fill all fields.';
+                document.getElementById('regError').style.display = 'block';
+                return false;
+            }
+            if (password !== confirm) {
+                document.getElementById('regError').textContent = 'Passwords do not match.';
+                document.getElementById('regError').style.display = 'block';
+                return false;
+            }
+            if (password.length < 6) {
+                document.getElementById('regError').textContent = 'Password must be at least 6 characters.';
+                document.getElementById('regError').style.display = 'block';
+                return false;
+            }
+
+            const users = JSON.parse(localStorage.getItem('propertySystemUsers') || '[]');
+            if (users.find(u => u.username === username)) {
+                document.getElementById('regError').textContent = 'Username already exists.';
+                document.getElementById('regError').style.display = 'block';
+                return false;
+            }
+
+            users.push({ name, username, password });
+            localStorage.setItem('propertySystemUsers', JSON.stringify(users));
+            document.getElementById('regError').style.display = 'none';
+            showToast('Account created successfully! Please login.', 'success');
+            // Switch to login
+            document.getElementById('registerScreen').style.display = 'none';
+            loginScreen.style.display = 'flex';
+            return true;
+        }
+
+        function logout() {
+            currentUser = null;
+            app.classList.remove('active');
+            loginScreen.style.display = 'flex';
+            registerScreen.style.display = 'none';
+            document.getElementById('loginUser').value = 'admin';
+            document.getElementById('loginPass').value = 'admin123';
+            showToast('Logged out successfully.', 'warning');
+        }
+
+        // ---------- EVENT BINDINGS ----------
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if any users exist, if not create default admin
+            const users = JSON.parse(localStorage.getItem('propertySystemUsers') || '[]');
+            if (users.length === 0) {
+                users.push({ name: 'Administrator', username: 'admin', password: 'admin123' });
+                localStorage.setItem('propertySystemUsers', JSON.stringify(users));
+            }
+
+            // Login
+            document.getElementById('loginBtn').addEventListener('click', function() {
+                const user = document.getElementById('loginUser').value.trim();
+                const pass = document.getElementById('loginPass').value.trim();
+                if (login(user, pass)) {
+                    document.getElementById('loginError').style.display = 'none';
+                } else {
+                    document.getElementById('loginError').style.display = 'block';
+                }
+            });
+
+            // Enter key on login
+            document.getElementById('loginPass').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') document.getElementById('loginBtn').click();
+            });
+
+            // Show register
+            document.getElementById('showRegister').addEventListener('click', function() {
+                loginScreen.style.display = 'none';
+                registerScreen.style.display = 'flex';
+                document.getElementById('regError').style.display = 'none';
+            });
+
+            // Show login
+            document.getElementById('showLogin').addEventListener('click', function() {
+                registerScreen.style.display = 'none';
+                loginScreen.style.display = 'flex';
+                document.getElementById('regError').style.display = 'none';
+            });
+
+            // Register
+            document.getElementById('registerBtn').addEventListener('click', function() {
+                const name = document.getElementById('regName').value.trim();
+                const user = document.getElementById('regUser').value.trim();
+                const pass = document.getElementById('regPass').value.trim();
+                const confirm = document.getElementById('regConfirm').value.trim();
+                register(name, user, pass, confirm);
+            });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+
+            // Tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.dataset.tab;
+                    switchTab(tabName);
+                });
+            });
+
+            // Bottom bar buttons
+            document.getElementById('btnNew').addEventListener('click', newProperty);
+            document.getElementById('btnSave').addEventListener('click', saveProperty);
+            document.getElementById('btnDelete').addEventListener('click', deleteProperty);
+            document.getElementById('btnClean').addEventListener('click', cleanForm);
+            document.getElementById('btnPrev').addEventListener('click', () => navigate(-1));
+            document.getElementById('btnNext').addEventListener('click', () => navigate(1));
+
+            // Search
+            document.getElementById('searchBtn').addEventListener('click', performSearch);
+            document.getElementById('clearSearchBtn').addEventListener('click', clearSearch);
+            document.getElementById('searchInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') performSearch();
+            });
+
+            // Real-time calculation on input change
+            const calcFields = ['fLand', 'fFloors', 'fOccupancy', 'fLandValue', 'fConstCost', 'fTaxRate'];
+            calcFields.forEach(id => {
+                document.getElementById(id).addEventListener('input', function() {
+                    const land = parseFloat(document.getElementById('fLand').value) || 0;
+                    const floors = parseInt(document.getElementById('fFloors').value) || 1;
+                    const occupancy = parseFloat(document.getElementById('fOccupancy').value) || 80;
+                    const landValue = parseFloat(document.getElementById('fLandValue').value) || 10000;
+                    const constCost = parseFloat(document.getElementById('fConstCost').value) || 15000;
+                    const taxRate = parseFloat(document.getElementById('fTaxRate').value) || 1.5;
+
+                    const { totalArea, assessed, tax } = calculateTax(land, floors, occupancy, landValue, constCost,
+                        taxRate);
+                    document.getElementById('calcTotalArea').textContent = totalArea.toFixed(2) + ' m²';
+                    document.getElementById('calcAssessed').textContent = assessed.toFixed(2) + ' ETB';
+                    document.getElementById('calcTax').textContent = tax.toFixed(2) + ' ETB';
+                });
+            });
+
+            // Export
+            document.getElementById('exportPdf').addEventListener('click', exportPDF);
+            document.getElementById('exportExcel').addEventListener('click', exportExcel);
+            document.getElementById('exportCsv').addEventListener('click', exportCSV);
+            document.getElementById('printReport').addEventListener('click', printReport);
+
+            // Check if already logged in (session)
+            // Start with login screen
+            loginScreen.style.display = 'flex';
+            registerScreen.style.display = 'none';
+            app.classList.remove('active');
+
+            // Try auto login with default for demo
+            // But we'll let user click login
+        });
+
+        // ---------- KEYBOARD SHORTCUTS ----------
+        document.addEventListener('keydown', function(e) {
+            if (!app.classList.contains('active')) return;
+
+            // Ctrl+N = New
+            if (e.ctrlKey && e.key === 'n') { e.preventDefault();
+                newProperty(); }
+            // Ctrl+S = Save
+            if (e.ctrlKey && e.key === 's') { e.preventDefault();
+                saveProperty(); }
+            // Ctrl+Delete = Delete
+            if (e.ctrlKey && e.key === 'Delete') { e.preventDefault();
+                deleteProperty(); }
+            // Left/Right arrows = Navigate
+            if (e.key === 'ArrowLeft') { e.preventDefault();
+                navigate(-1); }
+            if (e.key === 'ArrowRight') { e.preventDefault();
+                navigate(1); }
+            // Escape = Clean
+            if (e.key === 'Escape') { e.preventDefault();
+                cleanForm(); }
+        });
+
+        console.log('🏙️ City Property Tax System loaded successfully!');
+        console.log('📋 Developed with ❤️ by Yasin & DeepSeek');
+        console.log('🔐 Default login: admin / admin123');
+        console.log('📌 Keyboard shortcuts: Ctrl+N (New), Ctrl+S (Save), ← → (Navigate)');
+    </script>
+
+</body>
+</html>
