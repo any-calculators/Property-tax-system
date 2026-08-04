@@ -1,564 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🏙️ City Property Tax System</title>
-
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
-
-    <!-- Chart.js for Dashboard -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js">
-    </script>
-
-    <!-- jsPDF for PDF Export -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
-    </script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Professional Property Tax System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ========== GLOBAL RESET ========== */
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
         }
 
         body {
-            background: #f0f4f8;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            color: #1a2a3a;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* ========== APP CONTAINER ========== */
-        #app {
-            width: 100%;
+        .container {
             max-width: 1400px;
-            background: #ffffff;
-            border-radius: 28px;
-            box-shadow: 0 20px 60px rgba(11, 79, 108, 0.15);
-            overflow: hidden;
-            display: none;
-            flex-direction: column;
-            min-height: 90vh;
+            margin: 0 auto;
+            padding: 12px;
         }
 
-        #app.active {
-            display: flex;
-        }
-
-        /* ========== LOGIN SCREEN ========== */
-        #loginScreen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 90vh;
-            background: linear-gradient(145deg, #0B4F6C, #083b51);
-            border-radius: 28px;
-            padding: 30px;
-        }
-
-        .login-box {
-            background: white;
-            padding: 50px 40px;
-            border-radius: 24px;
-            max-width: 420px;
-            width: 100%;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-
-        .login-box h1 {
-            color: #0B4F6C;
-            font-size: 28px;
-            margin-bottom: 6px;
-        }
-
-        .login-box .subtitle {
-            color: #6c7a8a;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        .login-box .logo-icon {
-            font-size: 50px;
-            color: #C69430;
-            margin-bottom: 10px;
-        }
-
-        .login-box input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 15px;
-            margin-bottom: 16px;
-            transition: 0.2s;
-            background: #f8fafc;
-        }
-
-        .login-box input:focus {
-            outline: none;
-            border-color: #0B4F6C;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(11, 79, 108, 0.08);
-        }
-
-        .login-box .btn-login {
-            width: 100%;
-            padding: 14px;
-            background: #0B4F6C;
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, #0f2b44, #1a4f7a);
             color: white;
-            border: none;
+            padding: 18px 20px;
             border-radius: 12px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 8px;
-        }
-
-        .login-box .btn-login:hover {
-            background: #083b51;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(11, 79, 108, 0.3);
-        }
-
-        .login-box .error-msg {
-            color: #c62828;
-            font-size: 14px;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .login-box .register-link {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #6c7a8a;
-        }
-
-        .login-box .register-link a {
-            color: #0B4F6C;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        /* ========== TOP BAR ========== */
-        .top-bar {
-            background: #0B4F6C;
-            padding: 12px 24px;
+            margin-bottom: 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(15, 43, 68, 0.3);
         }
 
-        .top-bar .brand {
+        .header h1 {
+            font-size: clamp(20px, 4vw, 28px);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header h1 i {
+            margin-right: 10px;
+            color: #ffd700;
+        }
+
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
-            color: white;
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .top-bar .brand i {
-            color: #C69430;
-            font-size: 26px;
-        }
-
-        .top-bar .search-area {
-            display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
-            flex: 1;
-            max-width: 500px;
         }
 
-        .top-bar .search-area input {
+        .header .badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 13px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header .admin-toggle {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+            border: 1px solid #ffd700;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header .admin-toggle:hover {
+            background: rgba(255, 215, 0, 0.3);
+            transform: scale(1.02);
+        }
+
+        .header .admin-toggle.active {
+            background: #ffd700;
+            color: #0f2b44;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: white;
+            padding: 6px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            flex-wrap: wrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
             padding: 10px 16px;
             border: none;
-            border-radius: 30px;
-            font-size: 14px;
-            flex: 1;
-            min-width: 150px;
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            transition: 0.2s;
-        }
-
-        .top-bar .search-area input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .top-bar .search-area input:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        .top-bar .search-area button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 30px;
-            background: #C69430;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 13px;
-        }
-
-        .top-bar .search-area button:hover {
-            background: #b0812a;
-        }
-
-        .top-bar .user-area {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            color: white;
-        }
-
-        .top-bar .user-area .logout-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: none;
-            color: white;
-            padding: 8px 18px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: 0.2s;
-            font-size: 13px;
-        }
-
-        .top-bar .user-area .logout-btn:hover {
-            background: #c62828;
-        }
-
-        /* ========== HORIZONTAL PANEL (Tabs) ========== */
-        .horizontal-panel {
-            display: flex;
-            background: #f8fafc;
-            border-bottom: 2px solid #e2e8f0;
-            padding: 0 20px;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
-
-        .horizontal-panel .tab {
-            padding: 14px 24px;
-            font-weight: 600;
-            font-size: 14px;
-            color: #6c7a8a;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .horizontal-panel .tab:hover {
-            color: #0B4F6C;
-        }
-
-        .horizontal-panel .tab.active {
-            color: #0B4F6C;
-            border-bottom-color: #C69430;
-        }
-
-        /* ========== MAIN CONTENT ========== */
-        .main-content {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        /* ========== LEFT PANEL (Vertical List) ========== */
-        .left-panel {
-            width: 35%;
-            background: #f8fafc;
-            border-right: 2px solid #e2e8f0;
-            padding: 16px;
-            overflow-y: auto;
-            max-height: 65vh;
-        }
-
-        .left-panel .list-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .left-panel .list-header h3 {
-            font-size: 15px;
-            color: #0B4F6C;
-        }
-
-        .left-panel .list-header span {
-            background: #0B4F6C;
-            color: white;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
-
-        .property-item {
-            background: white;
-            padding: 14px 16px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 2px solid transparent;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-        }
-
-        .property-item:hover {
-            border-color: #C69430;
-            transform: translateX(4px);
-        }
-
-        .property-item.active {
-            border-color: #0B4F6C;
-            background: #f0f7fa;
-        }
-
-        .property-item .item-id {
-            font-weight: 700;
-            font-size: 13px;
-            color: #0B4F6C;
-        }
-
-        .property-item .item-name {
-            font-weight: 600;
-            font-size: 15px;
-            color: #1a2a3a;
-        }
-
-        .property-item .item-phone {
-            font-size: 12px;
-            color: #6c7a8a;
-        }
-
-        .property-item .item-tax {
-            font-size: 13px;
-            font-weight: 600;
-            color: #C69430;
-        }
-
-        /* ========== RIGHT PANEL (Details) ========== */
-        .right-panel {
-            flex: 1;
-            padding: 24px;
-            overflow-y: auto;
-            max-height: 65vh;
-        }
-
-        .right-panel .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px 24px;
-        }
-
-        .right-panel .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .right-panel .form-group label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #2a3b52;
-        }
-
-        .right-panel .form-group input,
-        .right-panel .form-group select {
-            padding: 10px 14px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 14px;
-            transition: 0.2s;
-            background: #fafcff;
-        }
-
-        .right-panel .form-group input:focus,
-        .right-panel .form-group select:focus {
-            outline: none;
-            border-color: #0B4F6C;
-            box-shadow: 0 0 0 4px rgba(11, 79, 108, 0.06);
-        }
-
-        .right-panel .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        /* ========== CALCULATED FIELDS ========== */
-        .calc-box {
-            background: #f0f7fa;
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-            border-left: 4px solid #C69430;
-        }
-
-        .calc-box .calc-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            font-size: 14px;
-        }
-
-        .calc-box .calc-row .label {
-            color: #2a3b52;
-            font-weight: 500;
-        }
-
-        .calc-box .calc-row .value {
-            font-weight: 700;
-            color: #0B4F6C;
-        }
-
-        .calc-box .calc-row.total {
-            border-top: 2px solid #cbd5e1;
-            margin-top: 8px;
-            padding-top: 10px;
-            font-size: 16px;
-        }
-
-        .calc-box .calc-row.total .value {
-            color: #C69430;
-            font-size: 18px;
-        }
-
-        /* ========== BOTTOM BAR ========== */
-        .bottom-bar {
-            background: #f8fafc;
-            border-top: 2px solid #e2e8f0;
-            padding: 12px 24px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .bottom-bar .btn {
-            padding: 10px 22px;
-            border: none;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .bottom-bar .btn-primary {
-            background: #0B4F6C;
-            color: white;
-        }
-
-        .bottom-bar .btn-primary:hover {
-            background: #083b51;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(11, 79, 108, 0.25);
-        }
-
-        .bottom-bar .btn-success {
-            background: #2E7D32;
-            color: white;
-        }
-
-        .bottom-bar .btn-success:hover {
-            background: #1e5a22;
-        }
-
-        .bottom-bar .btn-warning {
-            background: #C69430;
-            color: white;
-        }
-
-        .bottom-bar .btn-warning:hover {
-            background: #b0812a;
-        }
-
-        .bottom-bar .btn-danger {
-            background: #c62828;
-            color: white;
-        }
-
-        .bottom-bar .btn-danger:hover {
-            background: #a12020;
-        }
-
-        .bottom-bar .btn-outline {
             background: transparent;
-            border: 2px solid #cbd5e1;
-            color: #2a3b52;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: clamp(12px, 1.5vw, 14px);
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            flex: 0 0 auto;
         }
 
-        .bottom-bar .btn-outline:hover {
-            background: #e2e8f0;
+        .tab-btn:hover {
+            background: #f0f2f5;
+            color: #0f2b44;
         }
 
-        .bottom-bar .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .bottom-bar .counter {
-            margin-left: auto;
-            font-size: 13px;
-            color: #6c7a8a;
-            font-weight: 500;
-        }
-
-        /* ========== TOAST NOTIFICATION ========== */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #1a2a3a;
+        .tab-btn.active {
+            background: #0f2b44;
             color: white;
-            padding: 14px 28px;
-            border-radius: 16px;
-            font-weight: 500;
-            font-size: 14px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(15, 43, 68, 0.25);
+        }
+
+        .tab-btn i {
+            font-size: clamp(14px, 1.8vw, 16px);
+        }
+
+        .tab-content {
             display: none;
-            animation: slideUp 0.3s ease;
+            animation: fadeIn 0.35s ease;
         }
 
-        .toast.success {
-            background: #2E7D32;
-        }
-        .toast.error {
-            background: #c62828;
-        }
-        .toast.warning {
-            background: #C69430;
+        .tab-content.active {
+            display: block;
         }
 
-        @keyframes slideUp {
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(12px);
             }
             to {
                 opacity: 1;
@@ -566,1097 +157,1573 @@
             }
         }
 
-        .toast.show {
+        /* ===== CARDS ===== */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 18px 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .card-title {
+            font-size: clamp(16px, 2vw, 18px);
+            font-weight: 700;
+            color: #0f2b44;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #eef2f7;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .card-title i {
+            color: #1a4f7a;
+        }
+
+        /* ===== FORMS ===== */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 12px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-group label i {
+            color: #1a4f7a;
+            width: 16px;
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px 12px;
+            border: 1.5px solid #e0e4ea;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+            font-family: inherit;
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1a4f7a;
+            box-shadow: 0 0 0 3px rgba(26, 79, 122, 0.12);
+            background: white;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 50px;
+        }
+
+        .form-group .photo-upload {
+            padding: 16px;
+            border: 2px dashed #d0d7e2;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .form-group .photo-upload:hover {
+            border-color: #1a4f7a;
+            background: #f0f5fc;
+        }
+
+        .form-group .photo-upload i {
+            font-size: 24px;
+            color: #1a4f7a;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .form-group .photo-upload small {
+            color: #888;
+            font-size: 11px;
+        }
+
+        /* ===== TABLE ===== */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 -4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 600px;
+        }
+
+        table thead {
+            background: #0f2b44;
+            color: white;
+        }
+
+        table th {
+            padding: 10px 10px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eef2f7;
+            vertical-align: middle;
+        }
+
+        table tr:hover td {
+            background: #f8faff;
+        }
+
+        table td input,
+        table td select {
+            width: 100%;
+            padding: 7px 8px;
+            border: 1.5px solid #e0e4ea;
+            border-radius: 6px;
+            font-size: 13px;
+            background: #fafbfc;
+            min-width: 60px;
+        }
+
+        table td input:focus,
+        table td select:focus {
+            outline: none;
+            border-color: #1a4f7a;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            touch-action: manipulation;
+            min-height: 44px;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: #0f2b44;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1a4f7a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(15, 43, 68, 0.3);
+        }
+
+        .btn-success {
+            background: #1a8a4a;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #14703b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 138, 74, 0.3);
+        }
+
+        .btn-danger {
+            background: #c0392b;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #a93226;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #d68910;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #1a7a8a;
+            color: white;
+        }
+        .btn-info:hover {
+            background: #146673;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #0f2b44;
+            color: #0f2b44;
+        }
+        .btn-outline:hover {
+            background: #0f2b44;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 5px 12px;
+            font-size: 11px;
+            min-height: 32px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .btn-group .btn {
+            flex: 1 1 auto;
+            min-width: 80px;
+        }
+
+        /* ===== TAX SUMMARY ===== */
+        .tax-summary {
+            background: linear-gradient(135deg, #f8faff, #eef4fa);
+            border-radius: 12px;
+            padding: 18px;
+            border-left: 4px solid #1a4f7a;
+            margin-top: 14px;
+        }
+
+        .tax-summary .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tax-summary .summary-header h3 {
+            color: #0f2b44;
+            font-size: clamp(16px, 2vw, 20px);
+        }
+
+        .tax-summary .summary-header .badge-tax {
+            background: #0f2b44;
+            color: white;
+            padding: 4px 14px;
+            border-radius: 25px;
+            font-size: 12px;
+        }
+
+        .tax-summary table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            min-width: 300px;
+        }
+
+        .tax-summary table td {
+            padding: 10px 14px;
+        }
+
+        .tax-summary .total-row {
+            background: #0f2b44;
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .tax-summary .total-row td {
+            padding: 12px 14px;
+        }
+
+        /* ===== STATUS BADGES ===== */
+        .status-badge {
+            padding: 3px 12px;
+            border-radius: 25px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-badge.approved,
+        .status-badge.paid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.pending,
+        .status-badge.partial {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.rejected,
+        .status-badge.unpaid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* ===== ADMIN DASHBOARD ===== */
+        .admin-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .admin-overlay.show {
+            display: flex;
+        }
+
+        .admin-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalIn 0.3s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: scale(0.9) translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .admin-modal h2 {
+            color: #0f2b44;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-modal .form-group {
+            margin-bottom: 16px;
+        }
+
+        .admin-modal .btn {
+            width: 100%;
+        }
+
+        .admin-dashboard {
+            display: none;
+        }
+
+        .admin-dashboard.show {
             display: block;
         }
 
-        /* ========== DASHBOARD ========== */
         .dashboard-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
         }
 
         .stat-card {
             background: white;
-            padding: 20px;
-            border-radius: 16px;
-            border: 2px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 10px;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border-left: 4px solid #1a4f7a;
         }
 
-        .stat-card .stat-number {
-            font-size: 32px;
+        .stat-card .number {
+            font-size: clamp(22px, 3vw, 32px);
             font-weight: 700;
-            color: #0B4F6C;
+            color: #0f2b44;
         }
 
-        .stat-card .stat-label {
-            font-size: 14px;
-            color: #6c7a8a;
+        .stat-card .label {
+            font-size: 12px;
+            color: #888;
             margin-top: 4px;
         }
 
         .stat-card .stat-icon {
             font-size: 24px;
-            color: #C69430;
+            color: #1a4f7a;
+            opacity: 0.5;
         }
 
-        .chart-container {
+        .year-comparison {
             background: white;
-            padding: 20px;
-            border-radius: 16px;
-            border: 2px solid #e2e8f0;
-            margin-top: 16px;
-            max-width: 100%;
+            border-radius: 10px;
+            padding: 16px;
+            overflow-x: auto;
         }
 
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 900px) {
-            .main-content {
+        .year-comparison table {
+            min-width: 400px;
+        }
+
+        .year-comparison .year-total {
+            background: #0f2b44;
+            color: white;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 8px;
+            }
+
+            .header {
+                padding: 14px 16px;
                 flex-direction: column;
-            }
-            .left-panel {
-                width: 100%;
-                max-height: 30vh;
-                border-right: none;
-                border-bottom: 2px solid #e2e8f0;
-            }
-            .right-panel {
-                max-height: 50vh;
-            }
-            .right-panel .form-grid {
-                grid-template-columns: 1fr;
-            }
-            .right-panel .form-group.full-width {
-                grid-column: span 1;
-            }
-            .top-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .top-bar .search-area {
-                max-width: 100%;
-            }
-            .bottom-bar {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .bottom-bar .counter {
-                margin-left: 0;
-                width: 100%;
                 text-align: center;
             }
-            .login-box {
-                padding: 30px 20px;
+
+            .header-actions {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .tabs {
+                padding: 4px;
+                gap: 3px;
+                border-radius: 8px;
+            }
+
+            .tab-btn {
+                padding: 8px 12px;
+                font-size: 11px;
+                flex: 1 1 auto;
+                justify-content: center;
+            }
+
+            .tab-btn i {
+                font-size: 13px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .card {
+                padding: 14px 12px;
+                border-radius: 10px;
+            }
+
+            .card-title {
+                font-size: 15px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn-group .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            table {
+                font-size: 12px;
+                min-width: 500px;
+            }
+
+            table th,
+            table td {
+                padding: 6px 8px;
+            }
+
+            table td input,
+            table td select {
+                padding: 5px 6px;
+                font-size: 12px;
+                min-width: 50px;
+            }
+
+            .tax-summary {
+                padding: 14px;
+            }
+
+            .tax-summary table {
+                min-width: 250px;
+                font-size: 12px;
+            }
+
+            .admin-modal {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .stat-card {
+                padding: 12px;
+            }
+
+            .stat-card .number {
+                font-size: 20px;
+            }
+
+            .coord-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .header .badge {
+                font-size: 11px;
+                padding: 4px 12px;
+            }
+
+            .tab-btn {
+                padding: 6px 10px;
+                font-size: 10px;
+            }
+
+            .tab-btn i {
+                font-size: 11px;
+            }
+
+            table {
+                font-size: 11px;
+                min-width: 400px;
+            }
+
             .dashboard-stats {
                 grid-template-columns: 1fr 1fr;
             }
-            .horizontal-panel .tab {
-                padding: 10px 14px;
+
+            .stat-card .number {
+                font-size: 18px;
+            }
+
+            .btn {
                 font-size: 12px;
+                padding: 8px 14px;
+                min-height: 38px;
             }
-            .right-panel {
-                padding: 16px;
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            .no-print {
+                display: none !important;
             }
-            .calc-box .calc-row {
-                font-size: 13px;
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ddd;
+                break-inside: avoid;
             }
+            .header {
+                background: #0f2b44 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .table thead {
+                background: #0f2b44 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .tax-summary .total-row {
+                background: #0f2b44 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .admin-overlay {
+                display: none !important;
+            }
+            .admin-dashboard {
+                display: block !important;
+            }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0f2f5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a4f7a;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
 
-    <!-- ========== TOAST ========== -->
-    <div id="toast" class="toast"></div>
+    <div class="container" id="app">
 
-    <!-- ========== LOGIN SCREEN ========== -->
-    <div id="loginScreen">
-        <div class="login-box">
-            <div class="logo-icon"><i class="fas fa-city"></i></div>
-            <h1>Property Tax System</h1>
-            <p class="subtitle">City Revenue Management</p>
-
-            <input type="text" id="loginUser" placeholder="Username" value="admin" />
-            <input type="password" id="loginPass" placeholder="Password" value="admin123" />
-            <button class="btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Login</button>
-
-            <div id="loginError" class="error-msg"><i class="fas fa-exclamation-circle"></i> Invalid credentials</div>
-
-            <div class="register-link">
-                Don't have an account? <a id="showRegister">Create one</a>
+        <!-- ===== HEADER ===== -->
+        <div class="header">
+            <div>
+                <h1><i class="fas fa-landmark"></i> Property Tax System</h1>
+                <p style="font-size:13px; opacity:0.85; margin-top:3px;">Municipal Assessment & Tax Management</p>
             </div>
-        </div>
-    </div>
-
-    <!-- ========== REGISTER SCREEN (Hidden) ========== -->
-    <div id="registerScreen" style="display:none; justify-content:center; align-items:center; min-height:90vh; background: linear-gradient(145deg, #0B4F6C, #083b51); border-radius:28px; padding:30px;">
-        <div class="login-box">
-            <div class="logo-icon"><i class="fas fa-user-plus"></i></div>
-            <h1>Create Account</h1>
-            <p class="subtitle">Register as a system officer</p>
-
-            <input type="text" id="regName" placeholder="Full Name" />
-            <input type="text" id="regUser" placeholder="Username" />
-            <input type="password" id="regPass" placeholder="Password" />
-            <input type="password" id="regConfirm" placeholder="Confirm Password" />
-
-            <button class="btn-login" id="registerBtn"><i class="fas fa-check"></i> Register</button>
-            <div id="regError" class="error-msg"></div>
-            <div class="register-link">
-                Already have an account? <a id="showLogin">Login here</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========== MAIN APP ========== -->
-    <div id="app">
-
-        <!-- TOP BAR -->
-        <div class="top-bar">
-            <div class="brand">
-                <i class="fas fa-landmark"></i>
-                <span>CityProperty</span>
-            </div>
-            <div class="search-area">
-                <input type="text" id="searchInput" placeholder="🔍 Search by Name, ID, or Phone..." />
-                <button id="searchBtn"><i class="fas fa-search"></i> Search</button>
-                <button id="clearSearchBtn" style="background:rgba(255,255,255,0.1);"><i class="fas fa-times"></i> Clear</button>
-            </div>
-            <div class="user-area">
-                <span id="loggedUser"><i class="fas fa-user"></i> Admin</span>
-                <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            <div class="header-actions">
+                <span class="badge"><i class="fas fa-calendar-alt"></i> Tax Year: <span id="currentYearDisplay">2026</span></span>
+                <button class="admin-toggle" id="adminToggle" onclick="toggleAdmin()">
+                    <i class="fas fa-user-shield"></i> Admin
+                </button>
             </div>
         </div>
 
-        <!-- HORIZONTAL PANEL (Tabs) -->
-        <div class="horizontal-panel">
-            <div class="tab active" data-tab="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</div>
-            <div class="tab" data-tab="properties"><i class="fas fa-building"></i> Properties</div>
-            <div class="tab" data-tab="reports"><i class="fas fa-file-pdf"></i> Reports</div>
+        <!-- ===== TABS ===== -->
+        <div class="tabs no-print">
+            <button class="tab-btn active" data-tab="tab1"><i class="fas fa-user"></i> <span>Owner</span></button>
+            <button class="tab-btn" data-tab="tab2"><i class="fas fa-building"></i> <span>Buildings</span></button>
+            <button class="tab-btn" data-tab="tab3"><i class="fas fa-calculator"></i> <span>Tax</span></button>
+            <button class="tab-btn" data-tab="tab4"><i class="fas fa-file-invoice"></i> <span>Reports</span></button>
+            <button class="tab-btn" data-tab="tab5" id="adminTabBtn" style="display:none;"><i class="fas fa-chart-line"></i> <span>Dashboard</span></button>
         </div>
 
-        <!-- ========== TAB: DASHBOARD ========== -->
-        <div id="tab-dashboard" class="main-content" style="padding:24px; flex-direction:column; overflow-y:auto; max-height:65vh;">
-            <div class="dashboard-stats" id="statsContainer">
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-building"></i></div>
-                    <div class="stat-number" id="statProperties">0</div>
-                    <div class="stat-label">Total Properties</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-coins"></i></div>
-                    <div class="stat-number" id="statRevenue">0</div>
-                    <div class="stat-label">Total Revenue (ETB)</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
-                    <div class="stat-number" id="statUnpaid">0</div>
-                    <div class="stat-label">Unpaid Properties</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-                    <div class="stat-number" id="statPaid">0</div>
-                    <div class="stat-label">Paid Properties</div>
-                </div>
-            </div>
-
-            <div class="chart-container">
-                <canvas id="dashboardChart"></canvas>
-            </div>
-        </div>
-
-        <!-- ========== TAB: PROPERTIES ========== -->
-        <div id="tab-properties" class="main-content" style="display:none;">
-
-            <!-- LEFT PANEL (List) -->
-            <div class="left-panel" id="propertyList">
-                <div class="list-header">
-                    <h3><i class="fas fa-list"></i> Properties</h3>
-                    <span id="listCount">0</span>
-                </div>
-                <div id="propertyItems">
-                    <div style="text-align:center; color:#6c7a8a; padding:40px 0;">
-                        <i class="fas fa-building" style="font-size:40px; opacity:0.3;"></i>
-                        <p>No properties registered yet.<br />Click <strong>New</strong> to add one.</p>
+        <!-- ===== TAB 1: OWNER & PARCEL ===== -->
+        <div class="tab-content active" id="tab1">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-user-circle"></i> 1. Property Owner Information</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="ownerName" placeholder="Enter full name">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Telephone</label>
+                        <input type="text" id="ownerPhone" placeholder="Enter phone number">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> National ID (Front)</label>
+                        <div class="photo-upload" onclick="document.getElementById('idFront').click()">
+                            <i class="fas fa-camera"></i>
+                            <span>Upload Front</span>
+                            <small>PNG, JPG</small>
+                            <input type="file" id="idFront" accept="image/*" style="display:none">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-id-card"></i> National ID (Back)</label>
+                        <div class="photo-upload" onclick="document.getElementById('idBack').click()">
+                            <i class="fas fa-camera"></i>
+                            <span>Upload Back</span>
+                            <small>PNG, JPG</small>
+                            <input type="file" id="idBack" accept="image/*" style="display:none">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- RIGHT PANEL (Details Form) -->
-            <div class="right-panel" id="propertyForm">
-                <h3 style="color:#0B4F6C; margin-bottom:16px;"><i class="fas fa-edit"></i> Property Details</h3>
-
-                <div class="form-grid">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-map-pin"></i> 2. Parcel Information</div>
+                <div class="form-row">
                     <div class="form-group">
-                        <label>Property ID</label>
-                        <input type="text" id="fId" placeholder="Auto-generated" readonly style="background:#f0f4f8;" />
+                        <label><i class="fas fa-hashtag"></i> Parcel Number</label>
+                        <input type="text" id="parcelNo" placeholder="e.g., TW-00125">
                     </div>
                     <div class="form-group">
-                        <label>Registration Date</label>
-                        <input type="date" id="fDate" />
+                        <label><i class="fas fa-cube"></i> Block</label>
+                        <input type="text" id="block" placeholder="Enter block">
                     </div>
                     <div class="form-group">
-                        <label>Owner Name *</label>
-                        <input type="text" id="fOwner" placeholder="Full name" />
+                        <label><i class="fas fa-map-marker-alt"></i> Zone</label>
+                        <input type="text" id="zone" placeholder="Enter zone">
                     </div>
                     <div class="form-group">
-                        <label>Owner Phone *</label>
-                        <input type="text" id="fPhone" placeholder="09XXXXXXXX" />
+                        <label><i class="fas fa-city"></i> Kebele</label>
+                        <input type="text" id="kebele" placeholder="Enter kebele">
                     </div>
                     <div class="form-group">
-                        <label>Location (Woreda)</label>
-                        <input type="text" id="fLocation" placeholder="e.g., Woreda 04" />
-                    </div>
-                    <div class="form-group">
-                        <label>Usage Type</label>
-                        <select id="fUsage">
+                        <label><i class="fas fa-tag"></i> Land Category</label>
+                        <select id="landCategory">
                             <option value="Residential">Residential</option>
-                            <option value="Commercial">Commercial</option>
-                            <option value="Industrial">Industrial</option>
-                            <option value="Mixed">Mixed</option>
+                            <option value="Commercial" selected>Commercial</option>
+                            <option value="Mixed Use">Mixed Use</option>
+                            <option value="Service">Service</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Land Area (m²) *</label>
-                        <input type="number" id="fLand" placeholder="0" min="0" step="0.01" />
-                    </div>
-                    <div class="form-group">
-                        <label>Number of Floors *</label>
-                        <input type="number" id="fFloors" placeholder="1" min="1" />
-                    </div>
-                    <div class="form-group">
-                        <label>Floor Occupancy %</label>
-                        <input type="number" id="fOccupancy" placeholder="80" min="0" max="100" value="80" />
-                    </div>
-                    <div class="form-group">
-                        <label>Land Value per m² (ETB)</label>
-                        <input type="number" id="fLandValue" placeholder="10000" min="0" value="10000" />
-                    </div>
-                    <div class="form-group">
-                        <label>Construction Cost per m² (ETB)</label>
-                        <input type="number" id="fConstCost" placeholder="15000" min="0" value="15000" />
-                    </div>
-                    <div class="form-group">
-                        <label>Tax Rate (%)</label>
-                        <input type="number" id="fTaxRate" placeholder="1.5" min="0" step="0.1" value="1.5" />
-                    </div>
-                    <div class="form-group">
-                        <label>Payment Status</label>
-                        <select id="fStatus">
-                            <option value="Paid">Paid</option>
-                            <option value="Unpaid">Unpaid</option>
-                            <option value="Overdue">Overdue</option>
+                        <label><i class="fas fa-star"></i> Grade</label>
+                        <select id="grade">
+                            <option value="A">Grade A</option>
+                            <option value="B">Grade B</option>
+                            <option value="C" selected>Grade C</option>
+                            <option value="D">Grade D</option>
+                            <option value="E">Grade E </option>
                         </select>
                     </div>
                 </div>
+            </div>
 
-                <!-- Calculated Values -->
-                <div class="calc-box" id="calcBox">
-                    <div class="calc-row">
-                        <span class="label"><i class="fas fa-calculator"></i> Total Building Area</span>
-                        <span class="value" id="calcTotalArea">0.00 m²</span>
+            <div class="card">
+                <div class="card-title"><i class="fas fa-globe-africa"></i> UTM Coordinates (Zone 38N)</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-arrow-right"></i> X Coordinate (Easting)</label>
+                        <input type="text" id="xCoord" placeholder="Enter easting">
                     </div>
-                    <div class="calc-row">
-                        <span class="label">Assessed Value</span>
-                        <span class="value" id="calcAssessed">0.00 ETB</span>
+                    <div class="form-group">
+                        <label><i class="fas fa-arrow-up"></i> Y Coordinate (Northing)</label>
+                        <input type="text" id="yCoord" placeholder="Enter northing">
                     </div>
-                    <div class="calc-row total">
-                        <span class="label"><i class="fas fa-money-bill-wave"></i> Annual Property Tax</span>
-                        <span class="value" id="calcTax">0.00 ETB</span>
+                </div>
+            </div>
+
+            <div class="btn-group no-print">
+                <button class="btn btn-primary" onclick="nextTab('tab2')"><i class="fas fa-arrow-right"></i> Next: Buildings</button>
+            </div>
+        </div>
+
+        <!-- ===== TAB 2: BUILDING INVENTORY ===== -->
+        <div class="tab-content" id="tab2">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-building"></i> 3. Building Inventory</div>
+                <div class="table-responsive">
+                    <table id="buildingTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Type</th>
+                                <th>Material</th>
+                                <th>Grade</th>
+                                <th>Qty</th>
+                                <th>Length</th>
+                                <th>Width</th>
+                                <th>Area</th>
+                                <th class="no-print">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="buildingBody"></tbody>
+                    </table>
+                </div>
+                <div class="btn-group no-print" style="margin-top:12px;">
+                    <button class="btn btn-success btn-sm" onclick="addBuildingRow()"><i class="fas fa-plus"></i> Add</button>
+                    <button class="btn btn-primary" onclick="calculateTax()"><i class="fas fa-calculator"></i> Calculate</button>
+                    <button class="btn btn-info btn-sm" onclick="saveToDatabase()"><i class="fas fa-save"></i> Save</button>
+                </div>
+            </div>
+
+            <div class="btn-group no-print">
+                <button class="btn btn-outline" onclick="nextTab('tab1')"><i class="fas fa-arrow-left"></i> Back</button>
+                <button class="btn btn-primary" onclick="nextTab('tab3')"><i class="fas fa-arrow-right"></i> Tax</button>
+            </div>
+        </div>
+
+        <!-- ===== TAB 3: TAX ASSESSMENT ===== -->
+        <div class="tab-content" id="tab3">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-calculator"></i> 4. Tax Assessment</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-tag"></i> Tax Year</label>
+                        <input type="number" id="taxYear" value="2026">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-money-bill-wave"></i> Previous Balance (ETB)</label>
+                        <input type="number" id="prevBalance" value="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-exclamation-triangle"></i> Penalty (ETB)</label>
+                        <input type="number" id="penalty" value="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-percent"></i> Discount (ETB)</label>
+                        <input type="number" id="discount" value="0" step="0.01">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-money-bill"></i> Amount Paid (ETB)</label>
+                        <input type="number" id="amountPaid" value="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-credit-card"></i> Payment Method</label>
+                        <select id="paymentMethod">
+                            <option value="Cash">Cash</option>
+                            <option value="Bank">Bank</option>
+                            <option value="Mobile Money">Mobile Money</option>
+                            <option value="Online">Online</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-university"></i> Bank Name</label>
+                        <input type="text" id="bankName" placeholder="Enter bank name">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-hashtag"></i> Transaction Ref</label>
+                        <input type="text" id="transRef" placeholder="Enter reference">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-check-circle"></i> Approval Status</label>
+                        <select id="approvalStatus">
+                            <option value="Pending">Pending</option>
+                            <option value="Approved" selected>Approved</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar-check"></i> Registration Date</label>
+                        <input type="date" id="regDate">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-user-check"></i> Registered By</label>
+                        <input type="text" id="registeredBy" placeholder="Officer name">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" id="taxSummaryCard">
+                <div class="card-title"><i class="fas fa-file-invoice"></i> Tax Summary</div>
+                <div id="taxSummaryContent">
+                    <p style="color:#999; text-align:center; padding:25px 0;">
+                        <i class="fas fa-calculator" style="font-size:36px; display:block; margin-bottom:8px;"></i>
+                        Calculate tax in Buildings tab
+                    </p>
+                </div>
+            </div>
+
+            <div class="btn-group no-print">
+                <button class="btn btn-outline" onclick="nextTab('tab2')"><i class="fas fa-arrow-left"></i> Back</button>
+                <button class="btn btn-primary" onclick="nextTab('tab4')"><i class="fas fa-arrow-right"></i> Reports</button>
+            </div>
+        </div>
+
+        <!-- ===== TAB 4: REPORTS ===== -->
+        <div class="tab-content" id="tab4">
+            <div class="card">
+                <div class="card-title"><i class="fas fa-file-pdf"></i> 5. Reports & Export</div>
+                <div class="btn-group no-print" style="flex-wrap:wrap; gap:10px;">
+                    <button class="btn btn-danger" onclick="downloadPDF()"><i class="fas fa-file-pdf"></i> PDF</button>
+                    <button class="btn btn-success" onclick="exportCSV()"><i class="fas fa-file-csv"></i> CSV</button>
+                    <button class="btn btn-info" onclick="viewPDF()"><i class="fas fa-eye"></i> View PDF</button>
+                    <button class="btn btn-warning" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                </div>
+            </div>
+
+            <div class="card" id="reportSummary">
+                <div class="card-title"><i class="fas fa-file-invoice"></i> Full Tax Report</div>
+                <div id="reportContent">
+                    <p style="color:#999; text-align:center; padding:25px 0;">
+                        <i class="fas fa-file-alt" style="font-size:36px; display:block; margin-bottom:8px;"></i>
+                        Generate tax summary first
+                    </p>
+                </div>
+            </div>
+
+            <div class="btn-group no-print">
+                <button class="btn btn-outline" onclick="nextTab('tab3')"><i class="fas fa-arrow-left"></i> Back</button>
+            </div>
+        </div>
+
+        <!-- ===== TAB 5: ADMIN DASHBOARD ===== -->
+        <div class="tab-content" id="tab5">
+            <div class="admin-dashboard show">
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-chart-pie"></i> Dashboard Overview</div>
+                    <div class="dashboard-stats" id="dashboardStats">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class="fas fa-file-invoice"></i></div>
+                            <div class="number" id="totalAssessments">0</div>
+                            <div class="label">Total Assessments</div>
+                        </div>
+                        <div class="stat-card" style="border-left-color:#28a745;">
+                            <div class="stat-icon"><i class="fas fa-check-circle" style="color:#28a745;"></i></div>
+                            <div class="number" id="totalPaid">0</div>
+                            <div class="label">Fully Paid</div>
+                        </div>
+                        <div class="stat-card" style="border-left-color:#dc3545;">
+                            <div class="stat-icon"><i class="fas fa-exclamation-circle" style="color:#dc3545;"></i></div>
+                            <div class="number" id="totalUnpaid">0</div>
+                            <div class="label">Unpaid / Outstanding</div>
+                        </div>
+                        <div class="stat-card" style="border-left-color:#f39c12;">
+                            <div class="stat-icon"><i class="fas fa-money-bill-wave" style="color:#f39c12;"></i></div>
+                            <div class="number" id="totalRevenue">0</div>
+                            <div class="label">Total Revenue (ETB)</div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Hidden index for editing -->
-                <input type="hidden" id="editIndex" value="-1" />
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-calendar-alt"></i> Year-over-Year Comparison</div>
+                    <div class="year-comparison" id="yearComparison">
+                        <div class="table-responsive">
+                            <table id="comparisonTable">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Assessments</th>
+                                        <th>Total Tax (ETB)</th>
+                                        <th>Paid (ETB)</th>
+                                        <th>Outstanding (ETB)</th>
+                                        <th>Payment Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="comparisonBody">
+                                    <tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">No data available. Start by saving assessments.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-history"></i> All Saved Records</div>
+                    <div class="table-responsive">
+                        <table id="recordsTable">
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Parcel</th>
+                                    <th>Owner</th>
+                                    <th>Category</th>
+                                    <th>Total Tax</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recordsBody">
+                                <tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">No saved records.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- ========== TAB: REPORTS ========== -->
-        <div id="tab-reports" class="main-content" style="display:none; padding:24px; flex-direction:column; overflow-y:auto; max-height:65vh;">
-            <h3 style="color:#0B4F6C; margin-bottom:16px;"><i class="fas fa-file-alt"></i> Generate Reports</h3>
-
-            <div style="display:flex; gap:16px; flex-wrap:wrap; margin-bottom:24px;">
-                <button class="btn btn-primary" id="exportPdf"><i class="fas fa-file-pdf"></i> Export PDF</button>
-                <button class="btn btn-success" id="exportExcel"><i class="fas fa-file-excel"></i> Export Excel</button>
-                <button class="btn btn-warning" id="exportCsv"><i class="fas fa-file-csv"></i> Export CSV</button>
-                <button class="btn btn-outline" id="printReport"><i class="fas fa-print"></i> Print</button>
+        <!-- ===== ADMIN LOGIN OVERLAY ===== -->
+        <div class="admin-overlay" id="adminOverlay">
+            <div class="admin-modal">
+                <h2><i class="fas fa-user-shield" style="color:#f39c12;"></i> Admin Access</h2>
+                <p style="color:#666; margin-bottom:16px;">Enter admin credentials to view dashboard & historical data.</p>
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="adminUser" placeholder="Enter username" value="admin">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="adminPass" placeholder="Enter password" value="admin123">
+                </div>
+                <button class="btn btn-primary" onclick="loginAdmin()" style="width:100%;"><i class="fas fa-sign-in-alt"></i> Login</button>
+                <button class="btn btn-outline" onclick="closeAdmin()" style="width:100%; margin-top:8px;">Cancel</button>
+                <p style="text-align:center; margin-top:12px; font-size:12px; color:#999;">Default: admin / admin123</p>
             </div>
-
-            <div style="background:white; border-radius:16px; border:2px solid #e2e8f0; padding:20px; overflow-x:auto;">
-                <h4 style="color:#0B4F6C; margin-bottom:12px;">Property Register</h4>
-                <table id="reportTable" style="width:100%; border-collapse:collapse; font-size:13px;">
-                    <thead>
-                        <tr style="background:#0B4F6C; color:white;">
-                            <th style="padding:10px; text-align:left;">ID</th>
-                            <th style="padding:10px; text-align:left;">Owner</th>
-                            <th style="padding:10px; text-align:left;">Phone</th>
-                            <th style="padding:10px; text-align:left;">Location</th>
-                            <th style="padding:10px; text-align:right;">Land (m²)</th>
-                            <th style="padding:10px; text-align:right;">Floors</th>
-                            <th style="padding:10px; text-align:right;">Tax (ETB)</th>
-                            <th style="padding:10px; text-align:center;">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="reportBody">
-                        <tr><td colspan="8" style="text-align:center; padding:30px; color:#6c7a8a;">No data to display</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- ========== BOTTOM BAR ========== -->
-        <div class="bottom-bar">
-            <button class="btn btn-primary" id="btnNew"><i class="fas fa-plus"></i> New</button>
-            <button class="btn btn-outline" id="btnPrev"><i class="fas fa-chevron-left"></i> Previous</button>
-            <button class="btn btn-outline" id="btnNext">Next <i class="fas fa-chevron-right"></i></button>
-            <button class="btn btn-warning" id="btnSave"><i class="fas fa-save"></i> Save</button>
-            <button class="btn btn-danger" id="btnDelete"><i class="fas fa-trash"></i> Delete</button>
-            <button class="btn btn-outline" id="btnClean"><i class="fas fa-broom"></i> Clean</button>
-            <span class="counter" id="recordCounter">Record 0 of 0</span>
         </div>
 
     </div>
 
     <script>
-        // ========================================================
-        // ========== COMPLETE JAVASCRIPT ENGINE ==========
-        // ========================================================
+        // ============================================================
+        // CONFIGURATION
+        // ============================================================
+        const MATERIAL_RATES = {
+            'CIS (Jiingad)': 50,
+            'HCB (Jajur)': 90,
+            'Wooden (Sarab)': 40,
+            'Reinforced Concrete': 120,
+            'Stone': 75,
+            'Mixed Material': 60
+        };
 
-        // ---------- GLOBAL STATE ----------
-        let properties = [];
-        let currentIndex = -1;
-        let selectedId = null;
-        let currentUser = null;
-        let isSearching = false;
-        let searchResults = [];
+        const GRADE_FACTORS = { 'A': 1.30, 'B': 1.10, 'C': 1.00, 'D': 0.50, 'E': 0.30 };
+        const LAND_FACTORS = { 'Residential': 1.00, 'Commercial': 1.50, 'Mixed Use': 1.25, 'Service': 1.10 };
 
-        // DOM References
-        const app = document.getElementById('app');
-        const loginScreen = document.getElementById('loginScreen');
-        const registerScreen = document.getElementById('registerScreen');
-        const propertyList = document.getElementById('propertyItems');
-        const listCount = document.getElementById('listCount');
-        const recordCounter = document.getElementById('recordCounter');
+        const BUILDING_TYPES = [
+            'Jiingad Isku-kicis', 'Jiingad Farasawi', 'Jiingad Carabi',
+            'Jiingad Meherado Ah', 'Guri Jajur Ah', 'Guri Bangalo Ah',
+            'Guriyo Jajur Ah oo Meherado Ah'
+        ];
 
-        // ---------- TOAST ----------
-        function showToast(msg, type = 'success') {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.className = 'toast ' + type + ' show';
-            clearTimeout(t._hide);
-            t._hide = setTimeout(() => t.classList.remove('show'), 3500);
-        }
+        const MATERIAL_OPTIONS = Object.keys(MATERIAL_RATES);
+        const GRADE_OPTIONS = ['A', 'B', 'C', 'D', 'E'];
 
-        // ---------- DATA PERSISTENCE ----------
-        function loadData() {
+        // ============================================================
+        // STATE
+        // ============================================================
+        let snCounter = 0;
+        let taxResult = null;
+        let isAdmin = false;
+        const DB_KEY = 'propertyTaxSystemDB';
+
+        // ============================================================
+        // DATABASE (localStorage)
+        // ============================================================
+        function getDB() {
             try {
-                const d = localStorage.getItem('propertySystemData');
-                if (d) properties = JSON.parse(d);
-            } catch (_) { properties = []; }
-            // Ensure each property has all fields
-            properties = properties.map(p => ({
-                id: p.id || 'PROP-0001',
-                date: p.date || new Date().toISOString().split('T')[0],
-                owner: p.owner || '',
-                phone: p.phone || '',
-                location: p.location || '',
-                usage: p.usage || 'Residential',
-                land: parseFloat(p.land) || 0,
-                floors: parseInt(p.floors) || 1,
-                occupancy: parseFloat(p.occupancy) || 80,
-                landValue: parseFloat(p.landValue) || 10000,
-                constCost: parseFloat(p.constCost) || 15000,
-                taxRate: parseFloat(p.taxRate) || 1.5,
-                status: p.status || 'Unpaid',
-                totalArea: parseFloat(p.totalArea) || 0,
-                assessed: parseFloat(p.assessed) || 0,
-                tax: parseFloat(p.tax) || 0
-            }));
+                const data = localStorage.getItem(DB_KEY);
+                return data ? JSON.parse(data) : { records: [], nextId: 1 };
+            } catch { return { records: [], nextId: 1 }; }
         }
 
-        function saveData() {
-            localStorage.setItem('propertySystemData', JSON.stringify(properties));
+        function saveDB(db) {
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
         }
 
-        // ---------- ID GENERATION ----------
-        function generateId() {
-            const count = properties.length + 1;
-            return 'PROP-' + String(count).padStart(4, '0');
+        function saveAssessment(record) {
+            const db = getDB();
+            record.id = db.nextId++;
+            record.savedAt = new Date().toISOString();
+            db.records.push(record);
+            saveDB(db);
+            return record;
         }
 
-        // ---------- CALCULATIONS ----------
-        function calculateTax(land, floors, occupancy, landValue, constCost, taxRate) {
-            const totalArea = land * floors * (occupancy / 100);
-            const assessed = (land * landValue) + (totalArea * constCost);
-            const tax = assessed * (taxRate / 100);
-            return { totalArea, assessed, tax };
+        function getAllRecords() {
+            return getDB().records;
         }
 
-        // ---------- RENDER FUNCTIONS ----------
-        function renderList(data) {
-            const items = data || properties;
-            listCount.textContent = items.length;
-            if (items.length === 0) {
-                propertyList.innerHTML = `
-                    <div style="text-align:center; color:#6c7a8a; padding:40px 0;">
-                        <i class="fas fa-building" style="font-size:40px; opacity:0.3;"></i>
-                        <p>No properties registered yet.<br />Click <strong>New</strong> to add one.</p>
-                    </div>
-                `;
-                return;
-            }
+        function getRecordsByYear(year) {
+            return getDB().records.filter(r => r.taxYear == year);
+        }
 
-            propertyList.innerHTML = items.map((p, idx) => {
-                const isActive = (p.id === selectedId) ? 'active' : '';
-                return `
-                    <div class="property-item ${isActive}" data-idx="${idx}" data-id="${p.id}">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span class="item-id">${p.id}</span>
-                            <span class="item-tax">${p.tax.toFixed(2)} ETB</span>
-                        </div>
-                        <div class="item-name">${p.owner || 'Unknown'}</div>
-                        <div style="display:flex; justify-content:space-between; font-size:12px;">
-                            <span class="item-phone"><i class="fas fa-phone"></i> ${p.phone || 'N/A'}</span>
-                            <span style="color:${p.status === 'Paid' ? '#2E7D32' : '#c62828'}; font-weight:600;">${p.status}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+        function getYears() {
+            const years = getDB().records.map(r => r.taxYear);
+            return [...new Set(years)].sort();
+        }
 
-            // Attach click events
-            document.querySelectorAll('.property-item').forEach(el => {
-                el.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    selectProperty(id);
+        // ============================================================
+        // INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default date
+            const today = new Date().toISOString().slice(0, 10);
+            document.getElementById('regDate').value = today;
+            document.getElementById('currentYearDisplay').textContent = new Date().getFullYear();
+
+            // Tab switching
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(this.dataset.tab).classList.add('active');
                 });
             });
-        }
 
-        function renderForm(p) {
-            if (!p) {
-                document.getElementById('fId').value = '';
-                document.getElementById('fDate').value = '';
-                document.getElementById('fOwner').value = '';
-                document.getElementById('fPhone').value = '';
-                document.getElementById('fLocation').value = '';
-                document.getElementById('fUsage').value = 'Residential';
-                document.getElementById('fLand').value = '';
-                document.getElementById('fFloors').value = '';
-                document.getElementById('fOccupancy').value = '80';
-                document.getElementById('fLandValue').value = '10000';
-                document.getElementById('fConstCost').value = '15000';
-                document.getElementById('fTaxRate').value = '1.5';
-                document.getElementById('fStatus').value = 'Unpaid';
-                document.getElementById('calcTotalArea').textContent = '0.00 m²';
-                document.getElementById('calcAssessed').textContent = '0.00 ETB';
-                document.getElementById('calcTax').textContent = '0.00 ETB';
-                document.getElementById('editIndex').value = '-1';
-                return;
-            }
+            // Add default building row with empty values
+            addBuildingRow('', '', '', 1, '', '');
+        });
 
-            document.getElementById('fId').value = p.id || '';
-            document.getElementById('fDate').value = p.date || '';
-            document.getElementById('fOwner').value = p.owner || '';
-            document.getElementById('fPhone').value = p.phone || '';
-            document.getElementById('fLocation').value = p.location || '';
-            document.getElementById('fUsage').value = p.usage || 'Residential';
-            document.getElementById('fLand').value = p.land || '';
-            document.getElementById('fFloors').value = p.floors || '';
-            document.getElementById('fOccupancy').value = p.occupancy || 80;
-            document.getElementById('fLandValue').value = p.landValue || 10000;
-            document.getElementById('fConstCost').value = p.constCost || 15000;
-            document.getElementById('fTaxRate').value = p.taxRate || 1.5;
-            document.getElementById('fStatus').value = p.status || 'Unpaid';
+        // ============================================================
+        // BUILDING INVENTORY
+        // ============================================================
+        function addBuildingRow(type = '', material = '', grade = '', qty = 1, length = '', width = '') {
+            snCounter++;
+            const row = document.createElement('tr');
+            row.id = `building-row-${snCounter}`;
 
-            document.getElementById('calcTotalArea').textContent = (p.totalArea || 0).toFixed(2) + ' m²';
-            document.getElementById('calcAssessed').textContent = (p.assessed || 0).toFixed(2) + ' ETB';
-            document.getElementById('calcTax').textContent = (p.tax || 0).toFixed(2) + ' ETB';
+            const area = (parseFloat(length) || 0) * (parseFloat(width) || 0);
 
-            const idx = properties.findIndex(prop => prop.id === p.id);
-            document.getElementById('editIndex').value = idx;
-        }
+            row.innerHTML = `
+                <td>${snCounter}</td>
+                <td>
+                    <select class="building-type" data-row="${snCounter}">
+                        ${BUILDING_TYPES.map(t => `<option value="${t}" ${t === type ? 'selected' : ''}>${t}</option>`).join('')}
+                    </select>
+                </td>
+                <td>
+                    <select class="building-material" data-row="${snCounter}">
+                        ${MATERIAL_OPTIONS.map(m => `<option value="${m}" ${m === material ? 'selected' : ''}>${m}</option>`).join('')}
+                    </select>
+                </td>
+                <td>
+                    <select class="building-grade" data-row="${snCounter}">
+                        ${GRADE_OPTIONS.map(g => `<option value="${g}" ${g === grade ? 'selected' : ''}>${g}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="number" class="building-qty" data-row="${snCounter}" value="${qty}" min="1" step="1" style="width:65px;"></td>
+                <td><input type="number" class="building-length" data-row="${snCounter}" value="${length}" step="0.1" min="0" style="width:70px;"></td>
+                <td><input type="number" class="building-width" data-row="${snCounter}" value="${width}" step="0.1" min="0" style="width:70px;"></td>
+                <td class="building-area" data-row="${snCounter}">${area.toFixed(2)}</td>
+                <td class="no-print">
+                    <button class="btn btn-danger btn-sm" onclick="removeRow(${snCounter})"><i class="fas fa-trash"></i></button>
+                </td>
+            `;
 
-        function updateCounter() {
-            const total = properties.length;
-            const idx = currentIndex + 1;
-            recordCounter.textContent = total > 0 ? `Record ${idx} of ${total}` : 'Record 0 of 0';
-        }
-
-        function selectProperty(id) {
-            selectedId = id;
-            const idx = properties.findIndex(p => p.id === id);
-            if (idx === -1) return;
-            currentIndex = idx;
-            renderForm(properties[idx]);
-            renderList(properties);
-            updateCounter();
-            // Switch to properties tab
-            switchTab('properties');
-        }
-
-        // ---------- TAB SWITCHING ----------
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`.tab[data-tab="${tabName}"]`)?.classList.add('active');
-
-            document.querySelectorAll('.main-content').forEach(el => el.style.display = 'none');
-            const target = document.getElementById('tab-' + tabName);
-            if (target) {
-                target.style.display = tabName === 'dashboard' ? 'flex' : 'flex';
-                if (tabName === 'dashboard') {
-                    target.style.flexDirection = 'column';
-                }
-                if (tabName === 'properties') {
-                    target.style.flexDirection = 'row';
-                }
-                if (tabName === 'reports') {
-                    target.style.flexDirection = 'column';
-                }
-            }
-
-            if (tabName === 'dashboard') updateDashboard();
-            if (tabName === 'reports') updateReportTable();
-        }
-
-        // ---------- DASHBOARD ----------
-        function updateDashboard() {
-            const total = properties.length;
-            let revenue = 0,
-                unpaid = 0,
-                paid = 0;
-            properties.forEach(p => {
-                revenue += p.tax || 0;
-                if (p.status === 'Paid') paid++;
-                else unpaid++;
+            row.querySelector('.building-length').addEventListener('input', function() {
+                updateArea(this.dataset.row);
+            });
+            row.querySelector('.building-width').addEventListener('input', function() {
+                updateArea(this.dataset.row);
             });
 
-            document.getElementById('statProperties').textContent = total;
-            document.getElementById('statRevenue').textContent = revenue.toFixed(0);
-            document.getElementById('statUnpaid').textContent = unpaid;
-            document.getElementById('statPaid').textContent = paid;
+            document.getElementById('buildingBody').appendChild(row);
+            updateSN();
+        }
 
-            // Chart
-            const ctx = document.getElementById('dashboardChart').getContext('2d');
-            if (window._chart) window._chart.destroy();
+        function removeRow(id) {
+            const row = document.getElementById(`building-row-${id}`);
+            if (row && document.getElementById('buildingBody').children.length > 1) {
+                row.remove();
+                updateSN();
+            } else {
+                alert('Keep at least one building.');
+            }
+        }
 
-            window._chart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Paid', 'Unpaid', 'Overdue'],
-                    datasets: [{
-                        data: [
-                            properties.filter(p => p.status === 'Paid').length,
-                            properties.filter(p => p.status === 'Unpaid').length,
-                            properties.filter(p => p.status === 'Overdue').length
-                        ],
-                        backgroundColor: ['#2E7D32', '#C69430', '#c62828'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        title: { display: true, text: 'Property Status Distribution' }
-                    }
-                }
+        function updateArea(rowId) {
+            const row = document.getElementById(`building-row-${rowId}`);
+            if (!row) return;
+            const length = parseFloat(row.querySelector('.building-length').value) || 0;
+            const width = parseFloat(row.querySelector('.building-width').value) || 0;
+            row.querySelector('.building-area').textContent = (length * width).toFixed(2);
+        }
+
+        function updateSN() {
+            document.querySelectorAll('#buildingBody tr').forEach((row, i) => {
+                row.querySelector('td:first-child').textContent = i + 1;
+                const inputs = row.querySelectorAll('[data-row]');
+                inputs.forEach(inp => inp.dataset.row = i + 1);
+                row.id = `building-row-${i + 1}`;
             });
+            snCounter = document.querySelectorAll('#buildingBody tr').length;
         }
 
-        // ---------- REPORT TABLE ----------
-        function updateReportTable() {
-            const tbody = document.getElementById('reportBody');
-            if (properties.length === 0) {
-                tbody.innerHTML =
-                    `<tr><td colspan="8" style="text-align:center; padding:30px; color:#6c7a8a;">No data to display</td></tr>`;
+        function getBuildingData() {
+            const data = [];
+            document.querySelectorAll('#buildingBody tr').forEach(row => {
+                data.push({
+                    type: row.querySelector('.building-type').value,
+                    material: row.querySelector('.building-material').value,
+                    grade: row.querySelector('.building-grade').value,
+                    qty: parseFloat(row.querySelector('.building-qty').value) || 1,
+                    length: parseFloat(row.querySelector('.building-length').value) || 0,
+                    width: parseFloat(row.querySelector('.building-width').value) || 0,
+                    area: (parseFloat(row.querySelector('.building-length').value) || 0) *
+                        (parseFloat(row.querySelector('.building-width').value) || 0)
+                });
+            });
+            return data;
+        }
+
+        // ============================================================
+        // TAX CALCULATION
+        // ============================================================
+        function calculateTax() {
+            const buildings = getBuildingData();
+            if (buildings.length === 0 || buildings.every(b => b.area === 0)) {
+                alert('Please add buildings with valid dimensions.');
                 return;
             }
 
-            tbody.innerHTML = properties.map(p => `
-                <tr style="border-bottom:1px solid #e2e8f0;">
-                    <td style="padding:8px; font-weight:600;">${p.id}</td>
-                    <td style="padding:8px;">${p.owner}</td>
-                    <td style="padding:8px;">${p.phone}</td>
-                    <td style="padding:8px;">${p.location}</td>
-                    <td style="padding:8px; text-align:right;">${(p.land||0).toFixed(2)}</td>
-                    <td style="padding:8px; text-align:right;">${p.floors||1}</td>
-                    <td style="padding:8px; text-align:right;">${(p.tax||0).toFixed(2)}</td>
-                    <td style="padding:8px; text-align:center;">
-                        <span style="padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; 
-                            background:${p.status === 'Paid' ? '#d4edda' : '#f8d7da'}; 
-                            color:${p.status === 'Paid' ? '#155724' : '#721c24'};">
-                            ${p.status}
-                        </span>
-                    </td>
-                </tr>
-            `).join('');
-        }
+            const landCategory = document.getElementById('landCategory').value;
+            const grade = document.getElementById('grade').value;
+            const landFactor = LAND_FACTORS[landCategory] || 1.00;
+            const gradeFactor = GRADE_FACTORS[grade] || 1.00;
 
-        // ---------- CRUD OPERATIONS ----------
-        function newProperty() {
-            currentIndex = -1;
-            selectedId = null;
-            renderForm(null);
-            renderList(properties);
-            updateCounter();
-            showToast('New property form ready. Fill in details and Save.', 'success');
-            // Focus first field
-            document.getElementById('fOwner').focus();
-        }
+            const materialGroups = {};
+            buildings.forEach(b => {
+                const key = b.material;
+                if (!materialGroups[key]) materialGroups[key] = { totalArea: 0 };
+                materialGroups[key].totalArea += b.area * b.qty;
+            });
 
-        function saveProperty() {
-            const owner = document.getElementById('fOwner').value.trim();
-            const phone = document.getElementById('fPhone').value.trim();
-            const land = parseFloat(document.getElementById('fLand').value);
-            const floors = parseInt(document.getElementById('fFloors').value);
-            const occupancy = parseFloat(document.getElementById('fOccupancy').value) || 80;
-            const landValue = parseFloat(document.getElementById('fLandValue').value) || 10000;
-            const constCost = parseFloat(document.getElementById('fConstCost').value) || 15000;
-            const taxRate = parseFloat(document.getElementById('fTaxRate').value) || 1.5;
-            const location = document.getElementById('fLocation').value.trim();
-            const usage = document.getElementById('fUsage').value;
-            const status = document.getElementById('fStatus').value;
-            const date = document.getElementById('fDate').value || new Date().toISOString().split('T')[0];
-
-            if (!owner || !phone || !land || !floors) {
-                showToast('Please fill all required fields (*)', 'error');
-                return;
+            const taxDetails = [];
+            let totalTax = 0;
+            for (const [material, group] of Object.entries(materialGroups)) {
+                const rate = MATERIAL_RATES[material] || 0;
+                const tax = group.totalArea * rate * landFactor * gradeFactor;
+                taxDetails.push({ material, totalArea: group.totalArea, rate, tax });
+                totalTax += tax;
             }
-            if (phone.length < 10) {
-                showToast('Please enter a valid phone number', 'error');
-                return;
-            }
+            taxDetails.sort((a, b) => b.tax - a.tax);
 
-            const { totalArea, assessed, tax } = calculateTax(land, floors, occupancy, landValue, constCost, taxRate);
+            const prevBalance = parseFloat(document.getElementById('prevBalance').value) || 0;
+            const penalty = parseFloat(document.getElementById('penalty').value) || 0;
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+            const amountPaid = parseFloat(document.getElementById('amountPaid').value) || 0;
 
-            const idx = parseInt(document.getElementById('editIndex').value);
-            const propertyData = {
-                id: document.getElementById('fId').value || generateId(),
-                date: date,
-                owner,
-                phone,
-                location: location || 'Not specified',
-                usage,
-                land,
-                floors,
-                occupancy,
-                landValue,
-                constCost,
-                taxRate,
-                status,
-                totalArea,
-                assessed,
-                tax
+            const netTax = totalTax + prevBalance + penalty - discount;
+            const outstanding = netTax - amountPaid;
+
+            taxResult = {
+                ownerName: document.getElementById('ownerName').value || 'Unnamed',
+                parcelNo: document.getElementById('parcelNo').value || 'N/A',
+                landCategory,
+                grade,
+                taxDetails,
+                totalTax,
+                prevBalance,
+                penalty,
+                discount,
+                amountPaid,
+                netTax,
+                outstanding,
+                paymentStatus: outstanding <= 0 ? 'Paid' : (amountPaid > 0 ? 'Partial' : 'Unpaid'),
+                taxYear: parseInt(document.getElementById('taxYear').value) || new Date().getFullYear(),
+                approvalStatus: document.getElementById('approvalStatus').value,
+                regDate: document.getElementById('regDate').value,
+                registeredBy: document.getElementById('registeredBy').value || 'System',
+                buildings: buildings
             };
 
-            if (idx >= 0 && idx < properties.length) {
-                // Update existing
-                propertyData.id = properties[idx].id; // Keep same ID
-                properties[idx] = propertyData;
-                showToast(`Property ${propertyData.id} updated successfully!`, 'success');
-            } else {
-                // New
-                propertyData.id = generateId();
-                properties.push(propertyData);
-                showToast(`Property ${propertyData.id} registered successfully!`, 'success');
-            }
+            renderTaxSummary(taxResult);
+            renderReportContent(taxResult);
+            document.querySelector('[data-tab="tab3"]').click();
 
-            saveData();
-            const savedIdx = properties.findIndex(p => p.id === propertyData.id);
-            currentIndex = savedIdx;
-            selectedId = propertyData.id;
-            renderForm(properties[savedIdx]);
-            renderList(properties);
-            updateCounter();
-            updateDashboard();
-            updateReportTable();
+            return taxResult;
         }
 
-        function deleteProperty() {
-            const idx = parseInt(document.getElementById('editIndex').value);
-            if (idx < 0 || idx >= properties.length) {
-                showToast('No property selected to delete', 'error');
-                return;
-            }
-            const id = properties[idx].id;
-            if (!confirm(`Are you sure you want to delete property ${id}?`)) return;
+        // ============================================================
+        // RENDER TAX SUMMARY
+        // ============================================================
+        function renderTaxSummary(result) {
+            const container = document.getElementById('taxSummaryContent');
+            let rows = result.taxDetails.map(d => `
+                <tr><td>${d.material}</td><td>${d.totalArea.toFixed(2)} m²</td><td>${d.rate} ETB</td><td><strong>${d.tax.toFixed(2)} ETB</strong></td></tr>
+            `).join('');
 
-            properties.splice(idx, 1);
-            saveData();
-            currentIndex = -1;
-            selectedId = null;
-            renderForm(null);
-            renderList(properties);
-            updateCounter();
-            updateDashboard();
-            updateReportTable();
-            showToast(`Property ${id} deleted successfully.`, 'warning');
+            const statusClass = result.paymentStatus.toLowerCase();
+
+            container.innerHTML = `
+                <div class="tax-summary">
+                    <div class="summary-header">
+                        <h3><i class="fas fa-file-invoice"></i> TAX SUMMARY</h3>
+                        <span class="badge-tax">${result.landCategory} • Grade ${result.grade}</span>
+                    </div>
+                    <div style="margin-bottom:12px; display:flex; gap:16px; flex-wrap:wrap; font-size:13px;">
+                        <span><strong>Owner:</strong> ${result.ownerName}</span>
+                        <span><strong>Parcel:</strong> ${result.parcelNo}</span>
+                        <span><strong>Year:</strong> ${result.taxYear}</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Material</th><th>Area</th><th>Rate</th><th>Tax</th></tr></thead>
+                            <tbody>
+                                ${rows}
+                                <tr style="background:#f0f4f8; font-weight:600;">
+                                    <td colspan="3" style="text-align:right;">SUBTOTAL</td>
+                                    <td>${result.totalTax.toFixed(2)} ETB</td>
+                                </tr>
+                                ${result.prevBalance ? `<tr><td colspan="3" style="text-align:right;">Prev Balance</td><td>${result.prevBalance.toFixed(2)} ETB</td></tr>` : ''}
+                                ${result.penalty ? `<tr><td colspan="3" style="text-align:right;">Penalty</td><td>${result.penalty.toFixed(2)} ETB</td></tr>` : ''}
+                                ${result.discount ? `<tr><td colspan="3" style="text-align:right;">Discount</td><td>-${result.discount.toFixed(2)} ETB</td></tr>` : ''}
+                                <tr class="total-row">
+                                    <td colspan="3" style="text-align:right; font-size:16px;">TOTAL</td>
+                                    <td style="font-size:16px;">${result.netTax.toFixed(2)} ETB</td>
+                                </tr>
+                                <tr style="font-weight:600;">
+                                    <td colspan="3" style="text-align:right;">Paid</td>
+                                    <td>${result.amountPaid.toFixed(2)} ETB</td>
+                                </tr>
+                                <tr style="font-weight:700; font-size:15px; ${result.outstanding > 0 ? 'color:#dc3545;' : 'color:#28a745;'}">
+                                    <td colspan="3" style="text-align:right;">Outstanding</td>
+                                    <td>${result.outstanding.toFixed(2)} ETB</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="text-align:center; padding-top:10px;">
+                                        <span class="status-badge ${statusClass}">${result.paymentStatus}</span>
+                                        <span class="status-badge ${result.approvalStatus.toLowerCase()}">${result.approvalStatus}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
         }
 
-        function cleanForm() {
-            if (properties.length === 0) {
-                newProperty();
-                return;
-            }
-            // Just reset without saving
-            if (currentIndex >= 0 && currentIndex < properties.length) {
-                renderForm(properties[currentIndex]);
-            } else {
-                renderForm(null);
-            }
-            showToast('Form cleared.', 'warning');
+        // ============================================================
+        // RENDER REPORT
+        // ============================================================
+        function renderReportContent(result) {
+            const container = document.getElementById('reportContent');
+            let rows = result.taxDetails.map(d => `
+                <tr><td>${d.material}</td><td>${d.totalArea.toFixed(2)} m²</td><td>${d.rate} ETB</td><td><strong>${d.tax.toFixed(2)} ETB</strong></td></tr>
+            `).join('');
+
+            container.innerHTML = `
+                <div style="padding:6px 0;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px; background:#f8faff; padding:12px; border-radius:8px; font-size:13px;">
+                        <div><strong>Owner:</strong> ${result.ownerName}</div>
+                        <div><strong>Parcel:</strong> ${result.parcelNo}</div>
+                        <div><strong>Category:</strong> ${result.landCategory}</div>
+                        <div><strong>Grade:</strong> ${result.grade}</div>
+                        <div><strong>Date:</strong> ${document.getElementById('regDate').value}</div>
+                        <div><strong>Officer:</strong> ${document.getElementById('registeredBy').value || 'N/A'}</div>
+                        <div><strong>UTM:</strong> 38N X:${document.getElementById('xCoord').value || 'N/A'} Y:${document.getElementById('yCoord').value || 'N/A'}</div>
+                        <div><strong>Status:</strong> ${result.paymentStatus}</div>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>Material</th><th>Area</th><th>Rate</th><th>Tax</th></tr></thead>
+                            <tbody>
+                                ${rows}
+                                <tr style="background:#f0f4f8; font-weight:600;">
+                                    <td colspan="3" style="text-align:right;">TOTAL</td>
+                                    <td>${result.totalTax.toFixed(2)} ETB</td>
+                                </tr>
+                                <tr style="background:#0f2b44; color:white; font-weight:700; font-size:15px;">
+                                    <td colspan="3" style="text-align:right;">NET PAYABLE</td>
+                                    <td>${result.netTax.toFixed(2)} ETB</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top:14px; padding:12px; background:#f8faff; border-radius:8px; text-align:center; font-size:12px; color:#666;">
+                        <i class="fas fa-check-circle" style="color:#28a745;"></i> Computer-generated assessment.
+                        <br><small>Generated: ${new Date().toLocaleString()}</small>
+                    </div>
+                </div>
+            `;
         }
 
-        function navigate(direction) {
-            if (properties.length === 0) {
-                showToast('No properties to navigate.', 'error');
-                return;
-            }
-            if (currentIndex < 0 || currentIndex >= properties.length) {
-                currentIndex = 0;
-            }
-            let newIdx = currentIndex + direction;
-            if (newIdx < 0) newIdx = properties.length - 1;
-            if (newIdx >= properties.length) newIdx = 0;
-            currentIndex = newIdx;
-            selectedId = properties[currentIndex].id;
-            renderForm(properties[currentIndex]);
-            renderList(properties);
-            updateCounter();
-        }
-
-        // ---------- SEARCH ----------
-        function performSearch() {
-            const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            if (!query) {
-                isSearching = false;
-                renderList(properties);
+        // ============================================================
+        // SAVE TO DATABASE
+        // ============================================================
+        function saveToDatabase() {
+            if (!taxResult) {
+                alert('Please calculate tax first (click "Calculate" in Buildings tab).');
                 return;
             }
 
-            const results = properties.filter(p =>
-                (p.id || '').toLowerCase().includes(query) ||
-                (p.owner || '').toLowerCase().includes(query) ||
-                (p.phone || '').toLowerCase().includes(query)
+            // Check if already saved for this year & parcel
+            const existing = getDB().records.filter(r =>
+                r.parcelNo === taxResult.parcelNo && r.taxYear === taxResult.taxYear
             );
 
-            isSearching = true;
-            searchResults = results;
-            if (results.length === 0) {
-                showToast('No properties found matching your search.', 'error');
-                renderList([]);
-                return;
+            if (existing.length > 0) {
+                if (!confirm(`Record for ${taxResult.parcelNo} (${taxResult.taxYear}) already exists. Overwrite?`)) {
+                    return;
+                }
+                // Remove old
+                const db = getDB();
+                db.records = db.records.filter(r =>
+                    !(r.parcelNo === taxResult.parcelNo && r.taxYear === taxResult.taxYear)
+                );
+                saveDB(db);
             }
-            renderList(results);
-            // Select first result
-            if (results.length > 0) {
-                selectProperty(results[0].id);
+
+            const saved = saveAssessment(taxResult);
+            alert(`✅ Assessment saved successfully!\nParcel: ${saved.parcelNo}\nYear: ${saved.taxYear}\nTotal: ${saved.netTax.toFixed(2)} ETB`);
+
+            if (isAdmin) {
+                updateDashboard();
             }
-            showToast(`Found ${results.length} property(s).`, 'success');
         }
 
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            isSearching = false;
-            renderList(properties);
-            if (properties.length > 0) {
-                selectProperty(properties[0].id);
+        // ============================================================
+        // ADMIN FUNCTIONS
+        // ============================================================
+        function toggleAdmin() {
+            if (isAdmin) {
+                logoutAdmin();
             } else {
-                newProperty();
+                document.getElementById('adminOverlay').classList.add('show');
             }
-            showToast('Search cleared.', 'warning');
         }
 
-        // ---------- EXPORTS ----------
-        function exportPDF() {
-            if (properties.length === 0) {
-                showToast('No data to export.', 'error');
-                return;
+        function closeAdmin() {
+            document.getElementById('adminOverlay').classList.remove('show');
+        }
+
+        function loginAdmin() {
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+
+            if (user === 'admin' && pass === 'admin123') {
+                isAdmin = true;
+                closeAdmin();
+                document.getElementById('adminToggle').classList.add('active');
+                document.getElementById('adminTabBtn').style.display = 'inline-flex';
+                document.getElementById('adminTabBtn').click();
+                updateDashboard();
+                alert('🔐 Admin access granted.');
+            } else {
+                alert('❌ Invalid credentials. Use admin / admin123');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById('adminToggle').classList.remove('active');
+            document.getElementById('adminTabBtn').style.display = 'none';
+            document.querySelector('[data-tab="tab1"]').click();
+        }
+
+        function updateDashboard() {
+            const records = getAllRecords();
+            const stats = {
+                total: records.length,
+                paid: records.filter(r => r.paymentStatus === 'Paid').length,
+                unpaid: records.filter(r => r.paymentStatus !== 'Paid').length,
+                revenue: records.reduce((sum, r) => sum + (r.amountPaid || 0), 0)
+            };
+
+            document.getElementById('totalAssessments').textContent = stats.total;
+            document.getElementById('totalPaid').textContent = stats.paid;
+            document.getElementById('totalUnpaid').textContent = stats.unpaid;
+            document.getElementById('totalRevenue').textContent = stats.revenue.toFixed(2);
+
+            // Year-over-Year Comparison
+            const years = getYears();
+            const compBody = document.getElementById('comparisonBody');
+
+            if (years.length === 0) {
+                compBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">No data available.</td></tr>`;
+            } else {
+                compBody.innerHTML = years.map(year => {
+                    const yrRecords = getRecordsByYear(year);
+                    const totalTax = yrRecords.reduce((s, r) => s + r.netTax, 0);
+                    const paid = yrRecords.reduce((s, r) => s + r.amountPaid, 0);
+                    const outstanding = totalTax - paid;
+                    const rate = totalTax > 0 ? ((paid / totalTax) * 100).toFixed(1) : 0;
+                    return `
+                        <tr>
+                            <td><strong>${year}</strong></td>
+                            <td>${yrRecords.length}</td>
+                            <td>${totalTax.toFixed(2)}</td>
+                            <td>${paid.toFixed(2)}</td>
+                            <td>${outstanding.toFixed(2)}</td>
+                            <td><span class="status-badge ${rate >= 90 ? 'paid' : rate >= 50 ? 'partial' : 'unpaid'}">${rate}%</span></td>
+                        </tr>
+                    `;
+                }).join('');
             }
 
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('l', 'mm', 'a4');
-            doc.setFontSize(16);
-            doc.text('City Property Tax System - Property Register', 14, 20);
-
-            const cols = ['ID', 'Owner', 'Phone', 'Location', 'Land(m²)', 'Floors', 'Tax(ETB)', 'Status'];
-            const rows = properties.map(p => [
-                p.id, p.owner, p.phone, p.location,
-                (p.land || 0).toFixed(2),
-                p.floors || 1,
-                (p.tax || 0).toFixed(2),
-                p.status
-            ]);
-
-            doc.autoTable({
-                head: [cols],
-                body: rows,
-                startY: 30,
-                styles: { fontSize: 8 },
-                headStyles: { fillColor: [11, 79, 108] }
-            });
-
-            doc.save('Property_Register.pdf');
-            showToast('PDF exported successfully!', 'success');
-        }
-
-        function exportExcel() {
-            if (properties.length === 0) {
-                showToast('No data to export.', 'error');
-                return;
+            // All records
+            const recordsBody = document.getElementById('recordsBody');
+            if (records.length === 0) {
+                recordsBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#999; padding:20px;">No saved records.</td></tr>`;
+            } else {
+                recordsBody.innerHTML = records.slice().reverse().slice(0, 50).map(r => `
+                    <tr>
+                        <td>${r.taxYear}</td>
+                        <td>${r.parcelNo}</td>
+                        <td>${r.ownerName}</td>
+                        <td>${r.landCategory}</td>
+                        <td>${r.netTax.toFixed(2)} ETB</td>
+                        <td><span class="status-badge ${r.paymentStatus.toLowerCase()}">${r.paymentStatus}</span></td>
+                    </tr>
+                `).join('');
             }
-
-            const headers = ['ID', 'Owner', 'Phone', 'Location', 'Usage', 'Land(m²)',
-                'Floors', 'Occupancy%', 'LandValue/m²', 'ConstCost/m²', 'TaxRate%',
-                'TotalArea(m²)', 'Assessed(ETB)', 'Tax(ETB)', 'Status'
-            ];
-
-            let csv = headers.join(',') + '\n';
-            properties.forEach(p => {
-                const row = [
-                    p.id, p.owner, p.phone, p.location, p.usage,
-                    (p.land || 0).toFixed(2), p.floors || 1,
-                    (p.occupancy || 80).toFixed(1),
-                    (p.landValue || 10000).toFixed(2),
-                    (p.constCost || 15000).toFixed(2),
-                    (p.taxRate || 1.5).toFixed(1),
-                    (p.totalArea || 0).toFixed(2),
-                    (p.assessed || 0).toFixed(2),
-                    (p.tax || 0).toFixed(2),
-                    p.status
-                ];
-                csv += row.join(',') + '\n';
-            });
-
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'Property_Register.csv';
-            link.click();
-            showToast('CSV exported successfully!', 'success');
         }
 
-        function exportCSV() {
-            exportExcel(); // Same as CSV
-        }
-
-        // ---------- PRINT ----------
-        function printReport() {
+        // ============================================================
+        // PDF / CSV / EXPORT
+        // ============================================================
+        function downloadPDF() {
+            if (!taxResult) { alert('Calculate tax first.'); return; }
             window.print();
         }
 
-        // ---------- AUTHENTICATION ----------
-        function login(username, password) {
-            const users = JSON.parse(localStorage.getItem('propertySystemUsers') || '[]');
-            const user = users.find(u => u.username === username && u.password === password);
-            if (user) {
-                currentUser = user;
-                document.getElementById('loggedUser').innerHTML = `<i class="fas fa-user"></i> ${user.name}`;
-                loginScreen.style.display = 'none';
-                registerScreen.style.display = 'none';
-                app.classList.add('active');
-                loadData();
-                renderList(properties);
-                if (properties.length > 0) {
-                    selectProperty(properties[0].id);
-                } else {
-                    newProperty();
-                }
-                updateDashboard();
-                updateReportTable();
-                showToast(`Welcome back, ${user.name}!`, 'success');
-                return true;
-            }
-            return false;
+        function viewPDF() {
+            if (!taxResult) { alert('Calculate tax first.'); return; }
+            const content = document.getElementById('reportContent').innerHTML;
+            const win = window.open('', '_blank', 'width=1000,height=800');
+            win.document.write(`
+                <html><head><title>Property Tax Report</title>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                <style>
+                    body { font-family: 'Segoe UI', sans-serif; padding:30px; color:#1a2a3a; }
+                    .header { background:#0f2b44; color:white; padding:16px; border-radius:8px; margin-bottom:16px; text-align:center; }
+                    table { width:100%; border-collapse:collapse; font-size:13px; }
+                    th { background:#0f2b44; color:white; padding:8px 12px; text-align:left; }
+                    td { padding:8px 12px; border-bottom:1px solid #eee; }
+                    .total-row { background:#0f2b44; color:white; font-weight:bold; }
+                    .footer { margin-top:20px; text-align:center; color:#888; font-size:11px; border-top:1px solid #ddd; padding-top:12px; }
+                </style>
+                </head><body>
+                <div class="header"><h1><i class="fas fa-landmark"></i> Property Tax Report</h1><p>${document.getElementById('taxYear').value} Tax Year</p></div>
+                ${content}
+                <div class="footer">Generated ${new Date().toLocaleString()} • UTM Zone 38N</div>
+                <script>setTimeout(() => window.print(), 400);<\/script>
+                </body></html>
+            `);
+            win.document.close();
         }
 
-        function register(name, username, password, confirm) {
-            if (!name || !username || !password || !confirm) {
-                document.getElementById('regError').textContent = 'Please fill all fields.';
-                document.getElementById('regError').style.display = 'block';
-                return false;
-            }
-            if (password !== confirm) {
-                document.getElementById('regError').textContent = 'Passwords do not match.';
-                document.getElementById('regError').style.display = 'block';
-                return false;
-            }
-            if (password.length < 6) {
-                document.getElementById('regError').textContent = 'Password must be at least 6 characters.';
-                document.getElementById('regError').style.display = 'block';
-                return false;
-            }
+        function exportCSV() {
+            if (!taxResult) { alert('Calculate tax first.'); return; }
+            let csv = 'Material,Area (m²),Rate (ETB),Tax (ETB)\n';
+            taxResult.taxDetails.forEach(d => {
+                csv += `${d.material},${d.totalArea.toFixed(2)},${d.rate},${d.tax.toFixed(2)}\n`;
+            });
+            csv += `\nTotal Tax,${taxResult.totalTax.toFixed(2)} ETB\n`;
+            csv += `Net Payable,${taxResult.netTax.toFixed(2)} ETB\n`;
+            csv += `Paid,${taxResult.amountPaid.toFixed(2)} ETB\n`;
+            csv += `Outstanding,${taxResult.outstanding.toFixed(2)} ETB\n`;
+            csv += `Status,${taxResult.paymentStatus}\n`;
 
-            const users = JSON.parse(localStorage.getItem('propertySystemUsers') || '[]');
-            if (users.find(u => u.username === username)) {
-                document.getElementById('regError').textContent = 'Username already exists.';
-                document.getElementById('regError').style.display = 'block';
-                return false;
-            }
-
-            users.push({ name, username, password });
-            localStorage.setItem('propertySystemUsers', JSON.stringify(users));
-            document.getElementById('regError').style.display = 'none';
-            showToast('Account created successfully! Please login.', 'success');
-            // Switch to login
-            document.getElementById('registerScreen').style.display = 'none';
-            loginScreen.style.display = 'flex';
-            return true;
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Tax_${taxResult.parcelNo}_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
-        function logout() {
-            currentUser = null;
-            app.classList.remove('active');
-            loginScreen.style.display = 'flex';
-            registerScreen.style.display = 'none';
-            document.getElementById('loginUser').value = 'admin';
-            document.getElementById('loginPass').value = 'admin123';
-            showToast('Logged out successfully.', 'warning');
+        // ============================================================
+        // UTILITY
+        // ============================================================
+        function nextTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
         }
 
-        // ---------- EVENT BINDINGS ----------
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if any users exist, if not create default admin
-            const users = JSON.parse(localStorage.getItem('propertySystemUsers') || '[]');
-            if (users.length === 0) {
-                users.push({ name: 'Administrator', username: 'admin', password: 'admin123' });
-                localStorage.setItem('propertySystemUsers', JSON.stringify(users));
-            }
-
-            // Login
-            document.getElementById('loginBtn').addEventListener('click', function() {
-                const user = document.getElementById('loginUser').value.trim();
-                const pass = document.getElementById('loginPass').value.trim();
-                if (login(user, pass)) {
-                    document.getElementById('loginError').style.display = 'none';
-                } else {
-                    document.getElementById('loginError').style.display = 'block';
-                }
-            });
-
-            // Enter key on login
-            document.getElementById('loginPass').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') document.getElementById('loginBtn').click();
-            });
-
-            // Show register
-            document.getElementById('showRegister').addEventListener('click', function() {
-                loginScreen.style.display = 'none';
-                registerScreen.style.display = 'flex';
-                document.getElementById('regError').style.display = 'none';
-            });
-
-            // Show login
-            document.getElementById('showLogin').addEventListener('click', function() {
-                registerScreen.style.display = 'none';
-                loginScreen.style.display = 'flex';
-                document.getElementById('regError').style.display = 'none';
-            });
-
-            // Register
-            document.getElementById('registerBtn').addEventListener('click', function() {
-                const name = document.getElementById('regName').value.trim();
-                const user = document.getElementById('regUser').value.trim();
-                const pass = document.getElementById('regPass').value.trim();
-                const confirm = document.getElementById('regConfirm').value.trim();
-                register(name, user, pass, confirm);
-            });
-
-            // Logout
-            document.getElementById('logoutBtn').addEventListener('click', logout);
-
-            // Tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabName = this.dataset.tab;
-                    switchTab(tabName);
-                });
-            });
-
-            // Bottom bar buttons
-            document.getElementById('btnNew').addEventListener('click', newProperty);
-            document.getElementById('btnSave').addEventListener('click', saveProperty);
-            document.getElementById('btnDelete').addEventListener('click', deleteProperty);
-            document.getElementById('btnClean').addEventListener('click', cleanForm);
-            document.getElementById('btnPrev').addEventListener('click', () => navigate(-1));
-            document.getElementById('btnNext').addEventListener('click', () => navigate(1));
-
-            // Search
-            document.getElementById('searchBtn').addEventListener('click', performSearch);
-            document.getElementById('clearSearchBtn').addEventListener('click', clearSearch);
-            document.getElementById('searchInput').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') performSearch();
-            });
-
-            // Real-time calculation on input change
-            const calcFields = ['fLand', 'fFloors', 'fOccupancy', 'fLandValue', 'fConstCost', 'fTaxRate'];
-            calcFields.forEach(id => {
-                document.getElementById(id).addEventListener('input', function() {
-                    const land = parseFloat(document.getElementById('fLand').value) || 0;
-                    const floors = parseInt(document.getElementById('fFloors').value) || 1;
-                    const occupancy = parseFloat(document.getElementById('fOccupancy').value) || 80;
-                    const landValue = parseFloat(document.getElementById('fLandValue').value) || 10000;
-                    const constCost = parseFloat(document.getElementById('fConstCost').value) || 15000;
-                    const taxRate = parseFloat(document.getElementById('fTaxRate').value) || 1.5;
-
-                    const { totalArea, assessed, tax } = calculateTax(land, floors, occupancy, landValue, constCost,
-                        taxRate);
-                    document.getElementById('calcTotalArea').textContent = totalArea.toFixed(2) + ' m²';
-                    document.getElementById('calcAssessed').textContent = assessed.toFixed(2) + ' ETB';
-                    document.getElementById('calcTax').textContent = tax.toFixed(2) + ' ETB';
-                });
-            });
-
-            // Export
-            document.getElementById('exportPdf').addEventListener('click', exportPDF);
-            document.getElementById('exportExcel').addEventListener('click', exportExcel);
-            document.getElementById('exportCsv').addEventListener('click', exportCSV);
-            document.getElementById('printReport').addEventListener('click', printReport);
-
-            // Check if already logged in (session)
-            // Start with login screen
-            loginScreen.style.display = 'flex';
-            registerScreen.style.display = 'none';
-            app.classList.remove('active');
-
-            // Try auto login with default for demo
-            // But we'll let user click login
+        // Auto-calc when switching to Tax tab
+        document.querySelector('[data-tab="tab3"]').addEventListener('click', function() {
+            if (!taxResult) calculateTax();
         });
-
-        // ---------- KEYBOARD SHORTCUTS ----------
-        document.addEventListener('keydown', function(e) {
-            if (!app.classList.contains('active')) return;
-
-            // Ctrl+N = New
-            if (e.ctrlKey && e.key === 'n') { e.preventDefault();
-                newProperty(); }
-            // Ctrl+S = Save
-            if (e.ctrlKey && e.key === 's') { e.preventDefault();
-                saveProperty(); }
-            // Ctrl+Delete = Delete
-            if (e.ctrlKey && e.key === 'Delete') { e.preventDefault();
-                deleteProperty(); }
-            // Left/Right arrows = Navigate
-            if (e.key === 'ArrowLeft') { e.preventDefault();
-                navigate(-1); }
-            if (e.key === 'ArrowRight') { e.preventDefault();
-                navigate(1); }
-            // Escape = Clean
-            if (e.key === 'Escape') { e.preventDefault();
-                cleanForm(); }
-        });
-
-        console.log('🏙️ City Property Tax System loaded successfully!');
-        console.log('📋 Developed with ❤️ by Yasin & DeepSeek');
-        console.log('🔐 Default login: admin / admin123');
-        console.log('📌 Keyboard shortcuts: Ctrl+N (New), Ctrl+S (Save), ← → (Navigate)');
     </script>
-
 </body>
 </html>
